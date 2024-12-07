@@ -9,10 +9,14 @@
         <ul class="flex flex-row mt-1">
           <!-- Navigation Links -->
           <li>
-            <a class="px-2 text-white" href="#">Login / Register</a>
+            <button class="px-2 text-white focus:outline-none" @click.prevent="toggleAuthModal">
+              Login / Register
+            </button>
           </li>
           <li>
-            <a class="px-2 text-white" href="#">Manage</a>
+            <button class="px-2 text-white hover:text-gray-300 focus:outline-none" @click="handleManage">
+              Manage
+            </button>
           </li>
         </ul>
       </div>
@@ -20,9 +24,14 @@
   </header>
 </template>
 
-<script>
-export default {
+<script setup>
+import { useModalStore } from "@/stores/modal"
 
+const store = useModalStore()
+
+const toggleAuthModal = () => {
+  store.isOpen = !store.isOpen
+  console.log(store.isOpen)
 }
 </script>
 

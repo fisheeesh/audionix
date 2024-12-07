@@ -1,7 +1,7 @@
 <template>
-  <div class="fixed inset-0 z-10 hidden overflow-y-auto" id="modal">
+  <div :class="[store.hiddenClass, 'fixed inset-0 z-10 overflow-y-auto']" id="modal">
     <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-      <div class="fixed inset-0 transition-opacity">
+      <div @click="store.isOpen = !store.isOpen" class="fixed inset-0 transition-opacity">
         <div class="absolute inset-0 bg-gray-800 opacity-75"></div>
       </div>
 
@@ -16,7 +16,7 @@
           <div class="flex items-center justify-between pb-4">
             <p class="text-2xl font-bold">Your Account</p>
             <!-- Modal Close Button -->
-            <div class="z-50 cursor-pointer modal-close">
+            <div @click="store.isOpen = !store.isOpen" class="z-50 cursor-pointer modal-close">
               <i class="fas fa-times"></i>
             </div>
           </div>
@@ -24,15 +24,16 @@
           <!-- Tabs -->
           <ul class="flex flex-wrap mb-4">
             <li class="flex-auto text-center">
-              <a class="block px-4 py-3 text-white transition bg-blue-600 rounded hover:text-white" href="#">Login</a>
+              <a :class="{ 'hover:text-white text-white rounded bg-blue-600': tab === 'login', 'hover:text-blue-600': tab === 'register' }"
+                @click.prevent="tab = 'login'" class="block px-4 py-3 transition" href="#">Login</a>
             </li>
             <li class="flex-auto text-center">
-              <a class="block px-4 py-3 transition rounded" href="#">Register</a>
+              <a :class="{ 'hover:text-white text-white bg-blue-600': tab === 'register', 'hover:text-blue-600': tab === 'login' }"
+                @click.prevent="tab = 'register'" class="block px-4 py-3 transition rounded" href="#">Register</a>
             </li>
           </ul>
-
           <!-- Login Form -->
-          <form>
+          <form v-if="tab === 'login'">
             <!-- Email -->
             <div class="mb-3">
               <label class="inline-block mb-2">Email</label>
@@ -53,7 +54,7 @@
             </button>
           </form>
           <!-- Registration Form -->
-          <form>
+          <form v-else>
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
@@ -115,6 +116,12 @@
 </template>
 
 <script setup>
+import { useModalStore } from '@/stores/modal';
+import { ref } from 'vue';
+
+const store = useModalStore()
+
+const tab = ref('login')
 
 </script>
 

@@ -8,6 +8,10 @@ a:hover {
   text-decoration: none;
 }
 
+button:hover {
+  color: #f59e0b;
+}
+
 .text-orange {
   color: #f59e0b !important;
   fill: #f59e0b !important;
