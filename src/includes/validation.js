@@ -39,7 +39,7 @@ export default {
     defineRule('alpha_spaces', alphaSpaces)
     defineRule('email', email)
     defineRule('min_value', minVal)
-    defineRule('max-value', maxVal)
+    defineRule('max_value', maxVal)
     defineRule('confirmed', confirmed)
     defineRule('excluded', excluded)
   },

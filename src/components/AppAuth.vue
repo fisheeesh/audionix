@@ -54,7 +54,7 @@
             </button>
           </form>
           <!-- Registration Form -->
-          <vee-form v-else :validation-schema="schema">
+          <vee-form @submit="register" v-else :validation-schema="schema">
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
@@ -139,10 +139,14 @@ const schema = reactive({
   email: 'required|min:3|max:100|email',
   age: 'required|min_value:18|max_value:100',
   password: 'required|min:3|max:100',
-  confirm_password: 'confirmed:@password',
+  confirm_password: 'required|min:3|max:100|confirmed:@password',
   country: 'required|excluded:Antarctica',
   tos: 'required'
 })
+
+const register = (values) => {
+  console.log(values)
+}
 
 </script>
 
