@@ -54,20 +54,23 @@
             </button>
           </form>
           <!-- Registration Form -->
-          <form v-else>
+          <VeeForm v-else :validation-schema="schema">
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
-              <input type="text"
+              <VeeField name="name" type="text"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Name" />
+              <!-- The ErrorMessage comp will generate a span tag -->
+              <ErrorMessage class="text-red-600 text" name="name" />
             </div>
             <!-- Email -->
             <div class="mb-3">
               <label class="inline-block mb-2">Email</label>
-              <input type="email"
+              <VeeField name="email" type="email"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Email" />
+              <ErrorMessage class="text-red-600" name="email" />
             </div>
             <!-- Age -->
             <div class="mb-3">
@@ -108,7 +111,7 @@
               class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700">
               Submit
             </button>
-          </form>
+          </VeeForm>
         </div>
       </div>
     </div>
@@ -117,11 +120,23 @@
 
 <script setup>
 import { useModalStore } from '@/stores/modal';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 
 const store = useModalStore()
 
 const tab = ref('login')
+const schema = reactive({
+  /**
+   * ? If we want to add additional rules, we can separate each rule with '|'
+   */
+  name: 'required|min:3|max:100|alpha_spaces',
+  email: "required|max:100|email",
+  age: "",
+  password: "",
+  confirm_password: "",
+  countory: "",
+  tos: ""
+})
 
 </script>
 
