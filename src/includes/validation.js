@@ -4,7 +4,14 @@
  * $ defineRule allows us to register a rule globally
  * ! So the rule we register will be available to every validation form we create
  */
-import { Form as VeeeForm, Field as VeeField, defineRule, ErrorMessage } from 'vee-validate'
+
+import {
+  Form as VeeeForm,
+  Field as VeeField,
+  defineRule,
+  ErrorMessage,
+  configure,
+} from 'vee-validate'
 import {
   required,
   min,
@@ -34,13 +41,60 @@ export default {
      * ? The second is a func that will perform the validation
      */
     defineRule('required', required)
+    defineRule('tos', required)
     defineRule('min', min)
     defineRule('max', max)
     defineRule('alpha_spaces', alphaSpaces)
     defineRule('email', email)
     defineRule('min_value', minVal)
     defineRule('max_value', maxVal)
-    defineRule('confirmed', confirmed)
+    defineRule('passwords_mismatch', confirmed)
     defineRule('excluded', excluded)
+    defineRule('country_excluded', excluded)
+
+    /**
+     * ? Its has one argument which is obj with config options
+     */
+    configure({
+      /**
+       * ? This func will call whenever a globla validator func returns false
+       * $ @param ctx is an obj info about the field being validated.
+       * $ So we will have access to the name, value and rule being broken by the fields.
+       * $ We can use it to help us output different error messages based on the rule being broken
+       * $ @returns a string that will represent the message we want to output
+       */
+      generateMessage: (ctx) => {
+        const messages = {
+          required: `This field ${ctx.field} is required.`,
+          min: `The field ${ctx.field} is too short.`,
+          max: `The field ${ctx.field} is too long.`,
+          alpha_spaces: `This field ${ctx.field} may only contain letters, numbers, and spaces.`,
+          email: `This field ${ctx.field} must be a valid email address.`,
+          min_value: `This field ${ctx.field} must be at least 18.`,
+          max_value: `This field ${ctx.field} must be at most 100.`,
+          excluded: `You are not allowed ot use this value for this field ${ctx.field}.`,
+          country_excluded: `Due to restrictions, we do not accept users from this location.`,
+          passwords_mismatch : `The passwords don't match.`,
+          tos : `You must accept the Terms of Service.`
+        }
+
+        /**
+         * ? The rule.name property refers ot the name of the rule that was borkern (ex: required, min, etc)
+         * ? So, we want to check if a message for this rule exists in our messages object
+         * ? If does, we will set the message vari to it. If not, we will have a generic message
+         */
+        const message = messages[ctx.rule.name] ? messages[ctx.rule.name] : `The field ${ctx.field} is invalid.`
+
+        return message
+      },
+    })
   },
 }
+
+/**
+ * ! Firsty, we can only overwrite messages from global rules, which means
+ * ! We are allowed to define rules locally.
+ * ! A local rules error messages CANNOT be overwritten.
+ * ! Secondly, this will only work for functions that return a false boolean value.
+ * ! If the function from the package returned in actual string, we wouldn't be able to overwrite those messages.
+ */
