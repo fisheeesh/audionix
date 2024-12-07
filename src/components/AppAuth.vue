@@ -54,11 +54,11 @@
             </button>
           </form>
           <!-- Registration Form -->
-          <VeeForm v-else :validation-schema="schema">
+          <vee-form v-else :validation-schema="schema">
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
-              <VeeField name="name" type="text"
+              <vee-field name="name" type="text"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Name" />
               <!-- The ErrorMessage comp will generate a span tag -->
@@ -67,7 +67,7 @@
             <!-- Email -->
             <div class="mb-3">
               <label class="inline-block mb-2">Email</label>
-              <VeeField name="email" type="email"
+              <vee-field name="email" type="email"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Email" />
               <ErrorMessage class="text-red-600" name="email" />
@@ -75,43 +75,49 @@
             <!-- Age -->
             <div class="mb-3">
               <label class="inline-block mb-2">Age</label>
-              <input type="number"
+              <vee-field type="number" name="age"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded" />
+              <ErrorMessage class="text-red-600" name="age" />
             </div>
             <!-- Password -->
             <div class="mb-3">
               <label class="inline-block mb-2">Password</label>
-              <input type="password"
+              <vee-field name="password" type="password"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Password" />
+              <ErrorMessage class="text-red-600 text" name="password" />
             </div>
             <!-- Confirm Password -->
             <div class="mb-3">
               <label class="inline-block mb-2">Confirm Password</label>
-              <input type="password"
+              <vee-field name="confirm_password" type="password"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Confirm Password" />
+              <ErrorMessage class="text-red-600 text" name="confirm_password" />
             </div>
             <!-- Country -->
             <div class="mb-3">
               <label class="inline-block mb-2">Country</label>
-              <select
+              <vee-field as="select" name="country"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded">
                 <option value="USA">USA</option>
                 <option value="Mexico">Mexico</option>
                 <option value="Germany">Germany</option>
-              </select>
+                <option value="Antarctica">Antarctica</option>
+              </vee-field>
+              <ErrorMessage class="text-red-600 text" name="country" />
             </div>
             <!-- TOS -->
             <div class="pl-6 mb-3">
-              <input type="checkbox" class="float-left w-4 h-4 mt-1 -ml-6 rounded" />
+              <vee-field name="tos" value="1" type="checkbox" class="float-left w-4 h-4 mt-1 -ml-6 rounded" />
               <label class="inline-block">Accept terms of service</label>
+              <ErrorMessage class="block text-red-600 text" name="tos" />
             </div>
             <button type="submit"
               class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700">
               Submit
             </button>
-          </VeeForm>
+          </vee-form>
         </div>
       </div>
     </div>
@@ -130,12 +136,12 @@ const schema = reactive({
    * ? If we want to add additional rules, we can separate each rule with '|'
    */
   name: 'required|min:3|max:100|alpha_spaces',
-  email: "required|max:100|email",
-  age: "",
-  password: "",
-  confirm_password: "",
-  countory: "",
-  tos: ""
+  email: 'required|min:3|max:100|email',
+  age: 'required|min_value:18|max_value:100',
+  password: 'required|min:3|max:100',
+  confirm_password: 'confirmed:@password',
+  country: 'required|excluded:Antarctica',
+  tos: 'required'
 })
 
 </script>
