@@ -131,8 +131,21 @@
   </section>
 </template>
 
-<script setup>
+<script>
+// import { useUserStore } from '@/stores/user';
 
+export default {
+  // beforeRouteEnter(to, from, next) {
+  //   const userStore = useUserStore()
+
+  //   if (userStore.userLoggedIn) {
+  //     next()
+  //   }
+  //   else {
+  //     next({ name: 'home' })
+  //   }
+  // }
+}
 </script>
 
 <style></style>
