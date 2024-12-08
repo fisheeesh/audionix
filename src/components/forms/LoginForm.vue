@@ -27,7 +27,10 @@
 </template>
 
 <script setup>
+import { useUserStore } from '@/stores/user';
 import { reactive, ref } from 'vue'
+
+const userStore = useUserStore()
 
 const loginSchema = reactive({
   email: 'required|min:3|max:100|email',
@@ -39,15 +42,26 @@ const log_in_show_alert = ref(false)
 const log_in_alert_variant = ref('bg-blue-500')
 const log_in_alert_msg = ref('Please wait! We are loggging you in.')
 
-const logIn = (values) => {
+const logIn = async (values) => {
   log_in_submission.value = true
   log_in_show_alert.value = true
   log_in_alert_variant.value = 'bg-blue-500'
   log_in_alert_msg.value = 'Please wait! We are logging you in.'
 
+  try {
+    await userStore.authenticate(values)
+  }
+  catch (error) {
+    console.log(error.message)
+    log_in_submission.value = false
+    log_in_alert_variant.value = 'bg-red-500'
+    log_in_alert_msg.value = 'Invalid login details.'
+    return
+  }
+
   log_in_alert_variant.value = 'bg-green-500'
   log_in_alert_msg.value = 'Success! You are now logged in.'
-  console.log(values)
+  window.location.reload()
 }
 </script>
 

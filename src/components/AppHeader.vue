@@ -8,16 +8,23 @@
         <!-- Primary Navigation -->
         <ul class="flex flex-row mt-1">
           <!-- Navigation Links -->
-          <li>
+          <li v-if="!userStore.userLoggedIn">
             <button class="px-2 text-white focus:outline-none form-option" @click.prevent="toggleAuthModal">
               Login / Register
             </button>
           </li>
-          <li>
-            <button class="px-2 text-white hover:text-gray-300 focus:outline-none form-option" @click="handleManage">
-              Manage
-            </button>
-          </li>
+          <template v-else>
+            <li>
+              <button type="button" class="px-2 text-white hover:text-gray-300 focus:outline-none form-option" @click="handleManage">
+                Manage
+              </button>
+            </li>
+            <li>
+              <button @click="userStore.signOut" type="button" class="px-2 text-white hover:text-gray-300 focus:outline-none form-option">
+                LogOut
+              </button>
+            </li>
+          </template>
         </ul>
       </div>
     </nav>
@@ -26,8 +33,10 @@
 
 <script setup>
 import { useModalStore } from "@/stores/modal"
+import { useUserStore } from "@/stores/user";
 
 const store = useModalStore()
+const userStore = useUserStore()
 
 const toggleAuthModal = () => {
   store.isOpen = !store.isOpen
