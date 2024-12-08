@@ -59,6 +59,17 @@
       </vee-field>
       <ErrorMessage class="text-red-600 text" name="country" />
     </div>
+    <!-- User Role -->
+    <div class="mb-3">
+      <label class="inline-block mb-2">User Type</label>
+      <vee-field as="select" name="type"
+        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded">
+        <option value="Listener">Listener</option>
+        <option value="Artist">Artist</option>
+        <option value="Producer">Producer</option>
+      </vee-field>
+      <ErrorMessage class="text-red-600 text" name="type" />
+    </div>
     <!-- TOS -->
     <div class="pl-6 mb-3">
       <vee-field name="tos" value="1" type="checkbox" class="float-left w-4 h-4 mt-1 -ml-6 rounded" />
@@ -73,8 +84,10 @@
 </template>
 
 <script setup>
-import { auth } from '@/includes/firebase';
+import { useUserStore } from '@/stores/user';
 import { reactive, ref } from 'vue';
+
+const userStore = useUserStore()
 
 const schema = reactive({
   /**
@@ -86,11 +99,13 @@ const schema = reactive({
   password: 'required|min:9|max:100|excluded:password',
   confirm_password: 'passwords_mismatch:@password',
   country: 'required|country_excluded:Antarctica',
+  type: 'required',
   tos: 'tos'
 })
 
 const userData = reactive({
   country: 'USA',
+  type: 'Listener'
 })
 
 const reg_in_submission = ref(false)
@@ -104,9 +119,8 @@ const register = async (values) => {
   reg_alert_variant.value = 'bg-blue-500'
   reg_alert_msg.value = 'Please wait! Your account is being created.'
 
-  let userCred = null
   try {
-    userCred = await auth.createUserWithEmailAndPassword(values.email, values.password)
+    await userStore.register(values)
   }
   catch (error) {
     console.log(error.message)
@@ -118,7 +132,6 @@ const register = async (values) => {
 
   reg_alert_variant.value = 'bg-green-500'
   reg_alert_msg.value = 'Success! Your account has been created.'
-  console.log(userCred)
 }
 
 </script>
