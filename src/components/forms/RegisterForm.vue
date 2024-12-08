@@ -73,6 +73,7 @@
 </template>
 
 <script setup>
+import { auth } from '@/includes/firebase';
 import { reactive, ref } from 'vue';
 
 const schema = reactive({
@@ -98,15 +99,26 @@ const reg_alert_variant = ref('bg-blue-500')
 const reg_alert_msg = ref('Please wait! Your account is being created.')
 
 const register = async (values) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
   reg_show_alert.value = true
   reg_in_submission.value = true
   reg_alert_variant.value = 'bg-blue-500'
   reg_alert_msg.value = 'Please wait! Your account is being created.'
 
+  let userCred = null
+  try {
+    userCred = await auth.createUserWithEmailAndPassword(values.email, values.password)
+  }
+  catch (error) {
+    console.log(error.message)
+    reg_in_submission.value = false
+    reg_alert_variant.value = 'bg-red-500'
+    reg_alert_msg.value = 'An unexpected error occurred. Please try again later.'
+    return
+  }
+
   reg_alert_variant.value = 'bg-green-500'
   reg_alert_msg.value = 'Success! Your account has been created.'
-  console.log(values)
+  console.log(userCred)
 }
 
 </script>

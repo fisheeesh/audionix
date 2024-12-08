@@ -8,7 +8,7 @@ a:hover {
   text-decoration: none;
 }
 
-button:hover {
+.form-option:hover {
   color: #f59e0b;
 }
 

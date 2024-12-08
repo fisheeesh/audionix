@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import VeeValidatePulgin from './includes/validation'
+import './includes/firebase'
 
 //fontawesome
 import '@fortawesome/fontawesome-free/css/all.css'

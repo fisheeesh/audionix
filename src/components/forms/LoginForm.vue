@@ -37,16 +37,16 @@ const loginSchema = reactive({
 const log_in_submission = ref(false)
 const log_in_show_alert = ref(false)
 const log_in_alert_variant = ref('bg-blue-500')
-const log_in_alert_msg = ref('Please wait! Your account is being created.')
+const log_in_alert_msg = ref('Please wait! We are loggging you in.')
 
 const logIn = (values) => {
   log_in_submission.value = true
   log_in_show_alert.value = true
   log_in_alert_variant.value = 'bg-blue-500'
-  log_in_alert_msg.value = 'Please wait! Your account is being created.'
+  log_in_alert_msg.value = 'Please wait! We are logging you in.'
 
   log_in_alert_variant.value = 'bg-green-500'
-  log_in_alert_msg.value = 'Success! Your account has been created.'
+  log_in_alert_msg.value = 'Success! You are now logged in.'
   console.log(values)
 }
 </script>

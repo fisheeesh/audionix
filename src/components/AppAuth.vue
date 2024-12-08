@@ -37,7 +37,7 @@
             <LoginForm />
           </div>
           <!-- Registration Form -->
-          <div v-if="tab === 'register'">
+          <div v-else>
             <RegisterForm />
           </div>
         </div>
