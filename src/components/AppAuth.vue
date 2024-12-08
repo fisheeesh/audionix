@@ -33,95 +33,13 @@
             </li>
           </ul>
           <!-- Login Form -->
-          <form v-if="tab === 'login'">
-            <!-- Email -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Email</label>
-              <input type="email"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Enter Email" />
-            </div>
-            <!-- Password -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Password</label>
-              <input type="password"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Password" />
-            </div>
-            <button type="submit"
-              class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700">
-              Submit
-            </button>
-          </form>
+          <div v-if="tab === 'login'">
+            <LoginForm />
+          </div>
           <!-- Registration Form -->
-          <vee-form @submit="register" v-else :validation-schema="schema" :initial-values="userData">
-            <!-- Name -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Name</label>
-              <vee-field name="name" type="text"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Enter Name" />
-              <!-- The ErrorMessage comp will generate a span tag -->
-              <ErrorMessage class="text-red-600 text" name="name" />
-            </div>
-            <!-- Email -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Email</label>
-              <vee-field name="email" type="email"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Enter Email" />
-              <ErrorMessage class="text-red-600" name="email" />
-            </div>
-            <!-- Age -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Age</label>
-              <vee-field type="number" name="age"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded" />
-              <ErrorMessage class="text-red-600" name="age" />
-            </div>
-            <!-- Password -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Password</label>
-              <vee-field name="password" :bails="false" v-slot="{ field, errors }">
-                <input type="password"
-                  class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                  placeholder="Password" v-bind="field" />
-                <div class="text-red-600" v-for="(error, index) in errors" :key="index">
-                  {{ error }}
-                </div>
-              </vee-field>
-            </div>
-            <!-- Confirm Password -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Confirm Password</label>
-              <vee-field name="confirm_password" type="password"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Confirm Password" />
-              <ErrorMessage class="text-red-600 text" name="confirm_password" />
-            </div>
-            <!-- Country -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Country</label>
-              <vee-field as="select" name="country"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded">
-                <option value="USA">USA</option>
-                <option value="Mexico">Mexico</option>
-                <option value="Germany">Germany</option>
-                <option value="Antarctica">Antarctica</option>
-              </vee-field>
-              <ErrorMessage class="text-red-600 text" name="country" />
-            </div>
-            <!-- TOS -->
-            <div class="pl-6 mb-3">
-              <vee-field name="tos" value="1" type="checkbox" class="float-left w-4 h-4 mt-1 -ml-6 rounded" />
-              <label class="inline-block">Accept terms of service</label>
-              <ErrorMessage class="block text-red-600 text" name="tos" />
-            </div>
-            <button type="submit"
-              class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700">
-              Submit
-            </button>
-          </vee-form>
+          <div v-if="tab === 'register'">
+            <RegisterForm />
+          </div>
         </div>
       </div>
     </div>
@@ -130,31 +48,13 @@
 
 <script setup>
 import { useModalStore } from '@/stores/modal';
-import { reactive, ref } from 'vue';
+import { ref } from 'vue'
+import RegisterForm from './forms/RegisterForm.vue';
+import LoginForm from './forms/LoginForm.vue';
 
 const store = useModalStore()
 
 const tab = ref('login')
-const schema = reactive({
-  /**
-   * ? If we want to add additional rules, we can separate each rule with '|'
-   */
-  name: 'required|min:3|max:100|alpha_spaces',
-  email: 'required|min:3|max:100|email',
-  age: 'required|min_value:18|max_value:100',
-  password: 'required|min:9|max:100|excluded:password',
-  confirm_password: 'passwords_mismatch:@password',
-  country: 'required|country_excluded:Antarctica',
-  tos: 'tos'
-})
-
-const userData = reactive({
-  country : 'USA',
-})
-
-const register = (values) => {
-  console.log(values)
-}
 
 </script>
 

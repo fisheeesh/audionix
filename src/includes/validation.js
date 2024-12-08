@@ -91,7 +91,7 @@ export default {
       },
 
       /**
-       * !! A totasl of 4 options to change the validaation triggers
+       * !! A total of 4 options to change the validaation triggers
        * !! We are using the default values cus the default behavior works fine for our case
        */
       /**
