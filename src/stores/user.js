@@ -5,6 +5,10 @@ import { ref } from 'vue'
 export const useUserStore = defineStore('user', () => {
   const userLoggedIn = ref(false)
 
+  /**
+   *! Define logic in the components if the changes affect the component or it's children
+   *! Define logic in the store if the changes affect the store/state
+   */
   const register = async (values) => {
     let userCred = await auth.createUserWithEmailAndPassword(values.email, values.password)
 
@@ -32,7 +36,7 @@ export const useUserStore = defineStore('user', () => {
      * ? So, Firebase will store the document with the ID we passed in.
      * ? The Id is not the only we want to change. The doc() returns the document.
      * ? The obj does not come with add() instead it comes with set().
-     * $ The set() will add or modify existing properties in a document
+     * $ The set() will add or modify existing properties in a document.
      */
     await usersCollection.doc(userCred.user.uid).set({
       name: values.name,
@@ -42,6 +46,9 @@ export const useUserStore = defineStore('user', () => {
       user_type: values.type,
     })
 
+    /**
+     * ! This task is async so dun forget to add await key in front of it.
+     */
     await userCred.user.updateProfile({
       displayName: values.name,
     })
