@@ -8,11 +8,11 @@
 
       <!-- Buttons -->
       <div class="flex items-center space-x-2">
-        <button class="px-2 py-1 text-sm text-white bg-red-600 rounded">
-          <i class="fa fa-times"></i>
-        </button>
-        <button @click.prevent="showForm = !showForm" class="px-2 py-1 text-sm text-white bg-blue-600 rounded">
+        <button @click.prevent="showForm = !showForm" class="px-2 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700">
           <i class="fa fa-pencil-alt"></i>
+        </button>
+        <button @click.prevent="deleteSong" class="px-2 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700">
+          <i class="fa fa-times"></i>
         </button>
       </div>
     </div>
@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { songsCollection } from '@/includes/firebase';
+import { songsCollection, storage } from '@/includes/firebase';
 import { ErrorMessage } from 'vee-validate';
 import { reactive, ref } from 'vue';
 
@@ -107,6 +107,20 @@ const updateSong = async (values) => {
   in_submission.value = false
   alert_variant.value = 'bg-green-500'
   alert_msg.value = 'Success! Song has been updated.'
+}
+
+const deleteSong = async () => {
+  /**
+   * ? Delete song from firebase storage
+   */
+  const storageRef = storage.ref()
+  const songRef = storageRef.child(`songs/${props.song.original_name}`)
+
+  await songRef.delete()
+  /**
+   * ? Delete song from firebase firestore by docID
+   */
+  await songsCollection.doc(props.song.docID).delete()
 }
 </script>
 
