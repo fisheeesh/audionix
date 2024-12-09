@@ -45,20 +45,26 @@ import { onMounted, ref } from 'vue';
 
 const songs = ref([])
 
-onMounted(async () => {
+onMounted(() => {
   /**
    * ? where() helps us with filtering through the documents
    * ? First argument -> the name of the property, it should check in a doucment.
    * ? Second argument -> comparison operator
    * ? Third argument -> value to compare to
    */
-  const snapshot = await songsCollection.where('uid', '==', auth.currentUser.uid).get()
-  console.log(snapshot)
+  songsCollection.where('uid', '==', auth.currentUser.uid).onSnapshot(snap => {
+    // console.log(snap)
+    // console.log(snap.docs)
+    let results = []
+    snap.docs.forEach(doc => {
+      // console.log(doc)
+      // console.log(doc.data())
+      let song = { ...doc.data(), docID: doc.id }
 
-  snapshot.forEach(doc => {
-    const song = { ...doc.data(), docID: doc.id }
+      results.push(song)
+    })
 
-    songs.value.push(song)
+    songs.value = results
   })
 })
 </script>
