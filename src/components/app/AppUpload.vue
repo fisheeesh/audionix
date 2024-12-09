@@ -33,7 +33,7 @@
 
 <script setup>
 import { auth, songsCollection, storage } from '@/includes/firebase';
-import { ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 
 const is_dragover = ref(false)
 const uploads = ref([])
@@ -113,6 +113,26 @@ const upload = ($event) => {
     })
   })
 }
+
+/**
+ * ? When you navigate to another page, the component from the previous page wil unmounted.
+ * ? This applies to children comp too.
+ * ? Vue will take care of cleaning up (data, methods, computed) properties after a component has been unmounted. (to free memory in user machine)
+ * ! But it won't clean the req made by user.
+ * ? Simple req won't tax the application. But a file upload can.
+ * ? 2 life cycle hooks are when comp is ummounted.
+ * $ So, it is perfect to cancel the req if user navigates away from the page.
+ */
+onBeforeUnmount(() => {
+  uploads.value.forEach(upload => {
+    /**
+     * ? The task will come with a method call cancel() to cancel the req.
+     * ! We can only cancel each upload once at time.
+     * ? That's why we need to loop through each upload
+     */
+    upload.task.cancel()
+  })
+})
 
 </script>
 
