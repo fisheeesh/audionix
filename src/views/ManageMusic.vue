@@ -98,7 +98,7 @@
 </template>
 
 <script setup>
-import AppUpload from '@/components/AppUpload.vue';
+import AppUpload from '@/components/app/AppUpload.vue';
 
 
 </script>

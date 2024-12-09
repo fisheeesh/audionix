@@ -39,8 +39,8 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import AppAuth from './components/AppAuth.vue';
-import AppHeader from './components/AppHeader.vue';
+import AppAuth from './components/app/AppAuth.vue';
+import AppHeader from './components/app/AppHeader.vue';
 import { useUserStore } from './stores/user';
 import { auth } from './includes/firebase';
 

@@ -49,8 +49,8 @@
 <script setup>
 import { useModalStore } from '@/stores/modal';
 import { ref } from 'vue'
-import RegisterForm from './forms/RegisterForm.vue';
-import LoginForm from './forms/LoginForm.vue';
+import RegisterForm from '../forms/RegisterForm.vue';
+import LoginForm from '../forms/LoginForm.vue';
 
 const store = useModalStore()
 
