@@ -15,24 +15,13 @@
       </div>
       <hr class="my-6 " />
       <!-- Progess Bars -->
-      <div class="mb-4 ">
+      <div class="mb-4" v-for="upload in uploads" :key="upload.name">
         <!-- File Name -->
-        <div class="text-sm font-bold ">Just another song.mp3</div>
+        <div class="text-sm font-bold ">{{ upload.name }}</div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded ">
           <!-- Inner Progress Bar -->
-          <div class="transition-all bg-blue-400 progress-bar" style="width: 75%"></div>
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="text-sm font-bold">Just another song.mp3</div>
-        <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-          <div class="transition-all bg-blue-400 progress-bar" style="width: 35%"></div>
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="text-sm font-bold">Just another song.mp3</div>
-        <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-          <div class="transition-all bg-blue-400 progress-bar" style="width: 55%"></div>
+          <div class="transition-all bg-blue-400 progress-bar" :class="'bg-blue-400'"
+            :style="{ width: upload.current_progress + '%' }"></div>
         </div>
       </div>
     </div>
@@ -44,7 +33,7 @@ import { storage } from '@/includes/firebase';
 import { ref } from 'vue';
 
 const is_dragover = ref(false)
-
+const uploads = ref([])
 /**
  * ? $event is same obj wiht any other JS event
  */
@@ -73,7 +62,18 @@ const upload = ($event) => {
     const storageRef = storage.ref() // music-b055.firebasestorage.app
     const songsRef = storageRef.child(`songs/${file.name}`) // music-b055.firebasestorage.app/songs/example.mp3
 
-    songsRef.put(file)
+    const task = songsRef.put(file)
+
+    const uploadIndex = uploads.value.push({
+      task,
+      current_progress: 0,
+      name: file.name
+    }) - 1
+
+    task.on('state_changed', (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+      uploads.value[uploadIndex].current_progress = progress
+    })
   })
 }
 
