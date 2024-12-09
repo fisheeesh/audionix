@@ -17,10 +17,12 @@
       <!-- Progess Bars -->
       <div class="mb-4" v-for="upload in uploads" :key="upload.name">
         <!-- File Name -->
-        <div class="text-sm font-bold ">{{ upload.name }}</div>
+        <div class="text-sm font-bold" :class="upload.text_class">
+          <i :class="upload.icon"></i> {{ upload.name }}
+        </div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded ">
           <!-- Inner Progress Bar -->
-          <div class="transition-all bg-blue-400 progress-bar" :class="'bg-blue-400'"
+          <div class="transition-all progress-bar" :class="upload.variant"
             :style="{ width: upload.current_progress + '%' }"></div>
         </div>
       </div>
@@ -62,17 +64,35 @@ const upload = ($event) => {
     const storageRef = storage.ref() // music-b055.firebasestorage.app
     const songsRef = storageRef.child(`songs/${file.name}`) // music-b055.firebasestorage.app/songs/example.mp3
 
+    /**
+     * ? The task obj stores a copy of current snapshot
+     */
     const task = songsRef.put(file)
 
     const uploadIndex = uploads.value.push({
       task,
       current_progress: 0,
-      name: file.name
+      name: file.name,
+      variant: 'bg-blue-400',
+      icon: 'fas fa-spinner fa-spin',
+      text_class: ''
     }) - 1
 
+    /**
+     * ? on() will trigger every time file uploads
+     */
     task.on('state_changed', (snapshot) => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
       uploads.value[uploadIndex].current_progress = progress
+    }, (error) => {
+      uploads.value[uploadIndex].variant = 'bg-red-600'
+      uploads.value[uploadIndex].icon = 'fa-circle-exclamation'
+      uploads.value[uploadIndex].text_class = 'text-red-600'
+      console.log(error)
+    }, () => {
+      uploads.value[uploadIndex].variant = 'bg-green-400'
+      uploads.value[uploadIndex].icon = 'fa-check'
+      uploads.value[uploadIndex].text_class = 'text-green-400'
     })
   })
 }
