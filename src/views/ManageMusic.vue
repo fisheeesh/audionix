@@ -13,7 +13,8 @@
           </div>
           <div class="p-6">
             <!-- Composition Items -->
-            <AppCompositionItem v-for="song in songs" :key="song.docID" :song="song" />
+            <AppCompositionItem v-for="song in songs" :key="song.docID" :song="song"
+              :updateUnsavedFlag="updateUnsavedFlag" />
           </div>
         </div>
       </div>
@@ -26,6 +27,7 @@ import AppCompositionItem from '@/components/app/AppCompositionItem.vue';
 import AppUpload from '@/components/app/AppUpload.vue';
 import { auth, songsCollection } from '@/includes/firebase';
 import { onMounted, ref } from 'vue';
+import { onBeforeRouteLeave } from 'vue-router';
 // import { onBeforeRouteLeave } from 'vue-router';
 
 /**
@@ -44,6 +46,12 @@ import { onMounted, ref } from 'vue';
 // })
 
 const songs = ref([])
+/**
+ * ? We created a flag for restoring the status of user's changes.
+ * ? If it's true, they have unsaved changes.
+ * ? We should prevent them from navigating away from the page.
+ */
+const unsavedFlag = ref(false)
 
 onMounted(() => {
   /**
@@ -66,6 +74,37 @@ onMounted(() => {
 
     songs.value = results
   })
+})
+
+/**
+ * ? @input event is fired whenever the value for the filed changes (modified_name and genre field in compositionItem component)
+ * ? This will let us become aware of unsaved changes.
+ * ? What if the user saves their changes? -> We should turn the flag off.
+ */
+const updateUnsavedFlag = (value) => {
+  unsavedFlag.value = value
+}
+
+onBeforeRouteLeave((to, from, next) => {
+  /**
+   * ? If false, user has not unsaved changes.
+   * ? We can proceed to let user navigate to the next page.
+   */
+  if (!unsavedFlag.value) {
+    next()
+  }
+  else{
+    /**
+     *  $ We dun always want to prevent them from navigating away if there isn't a reason to hold them on the same page.
+     * ? If user has unsaved changes, we should ask them if they're sure about leaving.
+     * ? next() has optional one argument where we can pass in boolean value.
+     * ? That will tell the router whether to proceed with the navigation.
+     * ? If it's false, it will not proceed to the next page.
+     * ? If it's true, it will proceed.
+     */
+    const leave = confirm('You have unsaved changes. Are you sure you want to leave?')
+    next(leave)
+  }
 })
 </script>
 

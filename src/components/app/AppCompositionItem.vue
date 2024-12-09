@@ -27,14 +27,14 @@
           <label class="inline-block mb-2">Song Title</label>
           <VeeField name="modified_name" type="text"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-            placeholder="Enter Song Title" />
+            placeholder="Enter Song Title" @input="props.updateUnsavedFlag(true)"/>
           <ErrorMessage class="text-red-600" name="modified_name"></ErrorMessage>
         </div>
         <div class="mb-3">
           <label class="inline-block mb-2">Genre</label>
           <VeeField name="genre" type="text"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-            placeholder="Enter Genre" />
+            placeholder="Enter Genre" @input="props.updateUnsavedFlag(true)" />
           <ErrorMessage class="text-red-600" name="genre"></ErrorMessage>
         </div>
         <button :disabled="in_submission" type="submit" class="py-1.5 px-3 rounded text-white bg-green-600">
@@ -58,6 +58,9 @@ const props = defineProps({
   song: {
     type: Object,
     required: true
+  },
+  updateUnsavedFlag: {
+    type: Function
   }
 })
 
@@ -103,6 +106,11 @@ const updateSong = async (values) => {
     alert_msg.value = 'Something went wrong. Please try again later.'
     return
   }
+
+  /**
+   * $ When user saves the changes, we will turn the flag off.
+   */
+  props.updateUnsavedFlag(false)
 
   in_submission.value = false
   alert_variant.value = 'bg-green-500'
