@@ -13,6 +13,7 @@
         @dragleave.prevent.stop="is_dragover = false" @drop.prevent.stop="upload($event)">
         <h5>Drop your files here</h5>
       </div>
+      <input type="file" multiple @change="upload($event)">
       <hr class="my-6 " />
       <!-- Progess Bars -->
       <div class="mb-4" v-for="upload in uploads" :key="upload.name">
@@ -50,7 +51,9 @@ const upload = ($event) => {
    */
   // const { files } = $event.dataTransfer
   // console.log($event)
-  const files = [...$event.dataTransfer.files]
+  const files = $event.dataTransfer
+    ? [...$event.dataTransfer.files]
+    : [...$event.target.files]
 
   files.forEach(file => {
     if (file.type !== 'audio/mpeg') {
