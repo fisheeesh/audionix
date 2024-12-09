@@ -134,6 +134,13 @@ onBeforeUnmount(() => {
   })
 })
 
+// const cancelUploads = () => {
+//   uploads.value.forEach(upload => {
+//     upload.task.cancel()
+//   })
+// }
+
+
 </script>
 
 <style></style>
