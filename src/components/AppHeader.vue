@@ -1,11 +1,11 @@
 <template>
   <header id="header" class="bg-gray-700">
-    <nav class="container flex items-center justify-start px-4 py-5 mx-auto">
+    <nav class="container flex items-center justify-between px-4 py-5 mx-auto">
       <!-- App Name -->
       <router-link exact-active-class="no-active" :to="{ name: 'home' }"
         class="mr-4 text-2xl font-bold text-white uppercase">Music</router-link>
 
-      <div class="flex items-center flex-grow">
+      <div class="flex items-center">
         <!-- Primary Navigation -->
         <ul class="flex flex-row mt-1">
           <li>
@@ -17,7 +17,7 @@
               Login / Register
             </button>
           </li>
-          <!-- By wrapping it with the template tags, we'll be able ot render multiple list items -->
+          <!-- By wrapping it with the template tags, we'll be able to render multiple list items -->
           <template v-else>
             <li>
               <router-link :to="{ name: 'manage' }"
@@ -58,10 +58,26 @@ const toggleAuthModal = () => {
   console.log(store.isOpen)
 }
 
+/**
+ * ? We programmed the app to redirect the user if they attempt to visit a restricted page while not logged in
+ */
 const signOut = () => {
   userStore.signOut()
-  console.log(router)
-  console.log(route)
+  // console.log(router)
+  // console.log(route)
+
+  /**
+   * ? We check what the current route is before redirecting them
+   * ? This solution works if we're working on a small sized app, but it doesn't scale for large apps
+   * ! If we have a large number of restricted routes (user must be authenticated), we will have to update condi with || each route (Not a good deal)
+   */
+  // if(router.name === 'manage') router.push({ name: 'home' })
+
+  /**
+   * ? We can improve upon this by using root meta fields.
+   * ? meta fields are customs values which can assign to route -> string, boolean, obj, number, etc/
+   * ? By giving route meta fields, we can check for the meta field rather than the name
+   */
   if (route.meta.requiresAuth) router.push({ name: 'home' })
 }
 
