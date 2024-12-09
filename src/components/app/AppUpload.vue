@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { storage } from '@/includes/firebase';
+import { auth, songsCollection, storage } from '@/includes/firebase';
 import { ref } from 'vue';
 
 const is_dragover = ref(false)
@@ -89,7 +89,21 @@ const upload = ($event) => {
       uploads.value[uploadIndex].icon = 'fa-circle-exclamation'
       uploads.value[uploadIndex].text_class = 'text-red-600'
       console.log(error)
-    }, () => {
+    }, async () => {
+
+      const songs = {
+        uid: auth.currentUser.uid,
+        display_name: auth.currentUser.displayName,
+        original_name: task.snapshot.ref.name,
+        modified_name: task.snapshot.ref.name,
+        genre: '',
+        comment_count: 0,
+      }
+
+      songs.url = await task.snapshot.ref.getDownloadURL()
+
+      await songsCollection.add(songs)
+
       uploads.value[uploadIndex].variant = 'bg-green-400'
       uploads.value[uploadIndex].icon = 'fa-check'
       uploads.value[uploadIndex].text_class = 'text-green-400'

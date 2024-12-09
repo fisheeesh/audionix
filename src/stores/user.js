@@ -53,7 +53,7 @@ export const useUserStore = defineStore('user', () => {
       displayName: values.name,
     })
 
-    userLoggedIn.value = true
+    userLoggedIn.value = true 
   }
 
   const authenticate = async (values) => {
