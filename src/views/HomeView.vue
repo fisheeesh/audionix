@@ -27,7 +27,7 @@
       </div>
       <!-- Playlist -->
       <ol id="playlist">
-        <SongItem v-for="song in songs" :key="song.docID" :song="song"/>
+        <SongItem v-for="song in songStore.songs" :key="song.docID" :song="song" />
       </ol>
       <!-- .. end Playlist -->
     </div>
@@ -36,26 +36,39 @@
 
 <script setup>
 import SongItem from '@/components/app/SongItem.vue';
-import { songsCollection } from '@/includes/firebase';
-import { onMounted, ref } from 'vue';
+import { useSongStore } from '@/stores/song';
+import { onBeforeUnmount, onMounted } from 'vue';
 
-const songs = ref([])
+const songStore = useSongStore()
 
-onMounted(async () => {
-  songsCollection.onSnapshot(snap => {
-    // console.log(snap)
-    // console.log(snap.docs)
-    let result = []
-    snap.docs.forEach(doc => {
-      // console.log(doc)
-      // console.log(doc.data())
-      let song = { ...doc.data(), docID: doc.id }
+onMounted(() => {
+  getSongs()
 
-      result.push(song)
-    })
-    songs.value = result
-  })
+  window.addEventListener('scroll', handleScroll)
 })
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
+
+const getSongs = () => {
+  songStore.getAllSongs()
+}
+
+const handleScroll = () => {
+  const { scrollTop, offsetHeight } = document.documentElement
+  const { innerHeight } = window
+  /**
+   * $ Alternative Option Solution (less strict)
+   * ? scrollTop has to wrap with Math.round() cuz it may have decimal number
+   */
+  // const bottomOfWindow = Math.round(scrollTop) + innerHeight > offsetHeight -100
+  const bottomOfWindow = Math.round(scrollTop) + innerHeight === offsetHeight
+
+  if (bottomOfWindow) {
+    console.log('Bottom of window')
+  }
+}
 
 </script>
 

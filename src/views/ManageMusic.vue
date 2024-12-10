@@ -13,7 +13,7 @@
           </div>
           <div class="p-6">
             <!-- Composition Items -->
-            <AppCompositionItem v-for="song in songs" :key="song.docID" :song="song"
+            <AppCompositionItem v-for="song in songStore.songs" :key="song.docID" :song="song"
               :updateUnsavedFlag="updateUnsavedFlag" />
           </div>
         </div>
@@ -25,7 +25,8 @@
 <script setup>
 import AppCompositionItem from '@/components/app/AppCompositionItem.vue';
 import AppUpload from '@/components/app/AppUpload.vue';
-import { auth, songsCollection } from '@/includes/firebase';
+import { auth } from '@/includes/firebase';
+import { useSongStore } from '@/stores/song';
 import { onMounted, ref } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 // import { onBeforeRouteLeave } from 'vue-router';
@@ -45,7 +46,7 @@ import { onBeforeRouteLeave } from 'vue-router';
 //   next()
 // })
 
-const songs = ref([])
+const songStore = useSongStore()
 /**
  * ? We created a flag for restoring the status of user's changes.
  * ? If it's true, they have unsaved changes.
@@ -54,26 +55,7 @@ const songs = ref([])
 const unsavedFlag = ref(false)
 
 onMounted(() => {
-  /**
-   * ? where() helps us with filtering through the documents
-   * ? First argument -> the name of the property, it should check in a doucment.
-   * ? Second argument -> comparison operator
-   * ? Third argument -> value to compare to
-   */
-  songsCollection.where('uid', '==', auth.currentUser.uid).onSnapshot(snap => {
-    // console.log(snap)
-    // console.log(snap.docs)
-    let results = []
-    snap.docs.forEach(doc => {
-      // console.log(doc)
-      // console.log(doc.data())
-      let song = { ...doc.data(), docID: doc.id }
-
-      results.push(song)
-    })
-
-    songs.value = results
-  })
+  songStore.getSongsByUID(auth.currentUser.uid)
 })
 
 /**
@@ -93,7 +75,7 @@ onBeforeRouteLeave((to, from, next) => {
   if (!unsavedFlag.value) {
     next()
   }
-  else{
+  else {
     /**
      *  $ We dun always want to prevent them from navigating away if there isn't a reason to hold them on the same page.
      * ? If user has unsaved changes, we should ask them if they're sure about leaving.
