@@ -27,7 +27,7 @@
       </div>
       <!-- Playlist -->
       <ol id="playlist">
-        <SongItem v-for="song in songStore.songs" :key="song.docID" :song="song" />
+        <SongItem v-for="song in songs" :key="song.docID" :song="song" />
       </ol>
       <!-- .. end Playlist -->
     </div>
@@ -36,10 +36,12 @@
 
 <script setup>
 import SongItem from '@/components/app/SongItem.vue';
-import { useSongStore } from '@/stores/song';
-import { onBeforeUnmount, onMounted } from 'vue';
+import { songsCollection } from '@/includes/firebase';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-const songStore = useSongStore()
+const songs = ref([])
+const maxPerPage = ref(25)
+const pendingRequest = ref(false)
 
 onMounted(() => {
   getSongs()
@@ -51,23 +53,54 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll)
 })
 
-const getSongs = () => {
-  songStore.getAllSongs()
-}
-
 const handleScroll = () => {
   const { scrollTop, offsetHeight } = document.documentElement
   const { innerHeight } = window
   /**
    * $ Alternative Option Solution (less strict)
+   * $ const bottomOfWindow = Math.round(scrollTop) + innerHeight > offsetHeight -100
    * ? scrollTop has to wrap with Math.round() cuz it may have decimal number
    */
-  // const bottomOfWindow = Math.round(scrollTop) + innerHeight > offsetHeight -100
   const bottomOfWindow = Math.round(scrollTop) + innerHeight === offsetHeight
 
   if (bottomOfWindow) {
     console.log('Bottom of window')
+    getSongs()
+
   }
+}
+const getSongs = async () => {
+  if (pendingRequest.value) {
+    return
+  }
+
+  pendingRequest.value = true
+
+  let snapshots;
+
+  if (songs.value.length) {
+    const lastDoc = await songsCollection.doc(songs.value[songs.value.length - 1].docID).get()
+    snapshots = await songsCollection
+      .orderBy('modified_name')
+      .startAfter(lastDoc)
+      .limit(maxPerPage.value)
+      .get()
+  }
+  else {
+    snapshots = await songsCollection
+      .orderBy('modified_name')
+      .limit(maxPerPage.value)
+      .get()
+  }
+
+  snapshots.forEach(doc => {
+    songs.value.push({
+      docID: doc.id,
+      ...doc.data()
+    })
+  })
+
+  pendingRequest.value = false
 }
 
 </script>
