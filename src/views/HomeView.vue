@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import SongItem from '@/components/app/SongItem.vue';
+import SongItem from '@/components/song/SongItem.vue';
 import { songsCollection } from '@/includes/firebase';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 

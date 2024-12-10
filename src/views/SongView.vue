@@ -20,24 +20,13 @@
     <div class="relative flex flex-col bg-white border border-gray-200 rounded">
       <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
         <!-- Comment Count -->
-        <span class="card-title">Comments (15)</span>
+        <span class="card-title">Comments ({{ comments.length }})</span>
         <i class="float-right text-2xl text-green-400 fa fa-comments"></i>
       </div>
       <div class="p-6">
-        <div v-if="cmt_show_alert" :class="[cmt_alert_variant, 'p-4 mb-4 font-bold text-center text-white']">
-          {{ cmt_alert_msg }}
-        </div>
-        <VeeForm v-if="userStore.userLoggedIn" @submit="addComment" :validation-schema="cmtSchema">
-          <VeeField as="textarea" name="comment" style="resize: none" rows="5"
-            class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded mb-4"
-            placeholder="Your comment here..."></VeeField>
-          <ErrorMessage class="text-red-600 " name="comment" />
-          <button :disabled="cmt_in_submission" type="submit" class="py-1.5 px-3 rounded text-white bg-green-600 block">
-            Submit
-          </button>
-        </VeeForm>
+        <SongCmtForm v-if="userStore.userLoggedIn" :id="route.params.id" />
         <!-- Sort Comments -->
-        <select
+        <select v-model="sort"
           class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded">
           <option value="1">Latest</option>
           <option value="2">Oldest</option>
@@ -47,102 +36,31 @@
   </section>
   <!-- Comments -->
   <ul class="container mx-auto">
-    <li class="p-6 border border-gray-200 bg-gray-50">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
-      </p>
-    </li>
-    <li class="p-6 border border-gray-200 bg-gray-50">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
-      </p>
-    </li>
-    <li class="p-6 border border-gray-200 bg-gray-50">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
-      </p>
-    </li>
-    <li class="p-6 border border-gray-200 bg-gray-50">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
-      </p>
-    </li>
-    <li class="p-6 border border-gray-200 bg-gray-50">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
-      </p>
-    </li>
-    <li class="p-6 border border-gray-200 bg-gray-50">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
-      </p>
-    </li>
+    <SongComment v-for="comment in sortedComments" :key="comment.docID" :comment="comment" />
   </ul>
 </template>
 
 <script setup>
-import { auth, cmtCollection, songsCollection } from '@/includes/firebase';
+import SongCmtForm from '@/components/song/SongCmtForm.vue';
 import { useUserStore } from '@/stores/user';
-import { onMounted, reactive, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
+import { computed, onMounted, ref } from 'vue';
+import { cmtCollection, songsCollection } from '@/includes/firebase';
+import { useRouter } from 'vue-router';
+import SongComment from '@/components/song/SongComment.vue';
 
-const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
+
 const song = ref({})
-
-const cmt_in_submission = ref(false)
-const cmt_show_alert = ref(false)
-const cmt_alert_variant = ref('bg-blue-500')
-const cmt_alert_msg = ref('Please wait! Your comment is being submitted.')
-
-const cmtSchema = reactive({
-  comment: 'required|min:3'
-})
+const comments = ref([])
+const userStore = useUserStore()
+let sort = ref("1")
 
 onMounted(() => {
+  /**
+   * ? Fetching song by specific docID
+   */
   songsCollection.doc(route.params.id).onSnapshot(doc => {
     // console.log(doc.data())
     if (!doc.exists) {
@@ -151,46 +69,47 @@ onMounted(() => {
     }
     song.value = doc.data()
   })
+
+  /**
+   * ? Fetching all commnets according to song id
+   */
+  cmtCollection.where('sid', '==', route.params.id).onSnapshot(snap => {
+    let result = [];
+    snap.docs.forEach(doc => {
+      let comment = { ...doc.data(), docID: doc.id };
+      result.push(comment);
+    });
+    console.log("Fetched comments: ", result);
+    comments.value = result;
+  });
 })
 
-/**
- * $ Second argument content is optional which is obj.
- * ? It contains methods and properties about our form.
- * ? In our case, we can use it to reset the form.
- * ? By destructing the content obj, we will have access to use resetForm()
- */
-const addComment = async (values, { resetForm }) => {
-  console.log(values)
-  cmt_in_submission.value = true
-  cmt_show_alert.value = true
-  cmt_alert_variant.value = 'bg-blue-500'
-  cmt_alert_msg.value = 'Please wait! Your comment is being submitted.'
+const sortedComments = computed(() => {
+  console.log("Sorting triggered: ", sort.value);
+  /**
+   * $ We will get an error if we call sort() directly.
+   * ? Cus the sort array func will change the way it's being called on.
+   * ? computed properties may use data properties, but tehy shouldn't chagne them, at least directly.
+   * $ That's why we are getting an error.
+   * ? To overcome this, before calling sort() we will call the slice()
+   * ? slice() returns a brand new array based on the old array
+   * ?
+   */
+  return comments.value.slice().sort((a, b) => {
+    /**
+     * ? Before making comparison, we first check if the ordering should be ascending or descending.
+     * ? If it's 1, it will be latest to oldest.
+     * ? If it's 2, it will be oldest to latest.
+     */
+    if (sort.value === "1") {
+      return new Date(b.datePosted) - new Date(a.datePosted)
+    }
 
-  const comment = {
-    content: values.comment,
-    datePosted: new Date().toString(),
-    sid: route.params.id,
-    name: auth.currentUser.displayName,
-    uid: auth.currentUser.uid
-  }
-
-  try {
-    await cmtCollection.add(comment)
-  }
-  catch (err) {
-    console.log(err.message)
-    cmt_in_submission.value = false
-    cmt_alert_variant.value = 'bg-red-500'
-    cmt_alert_msg.value = 'Something went wrong. Please try again later.'
-    return
-  }
-
-  cmt_in_submission.value = false
-  cmt_alert_variant.value = 'bg-green-500'
-  cmt_alert_msg.value = 'Success! Comment added.'
-
-  resetForm()
-}
+    if (sort.value === "2") {
+      return new Date(a.datePosted) - new Date(b.datePosted)
+    }
+  })
+})
 
 </script>
 
