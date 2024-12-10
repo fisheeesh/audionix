@@ -8,7 +8,8 @@
 
       <!-- Buttons -->
       <div class="flex items-center space-x-2">
-        <button @click.prevent="showForm = !showForm" class="px-2 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700">
+        <button @click.prevent="showForm = !showForm"
+          class="px-2 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700">
           <i class="fa fa-pencil-alt"></i>
         </button>
         <button @click.prevent="deleteSong" class="px-2 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700">
@@ -27,7 +28,7 @@
           <label class="inline-block mb-2">Song Title</label>
           <VeeField name="modified_name" type="text"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-            placeholder="Enter Song Title" @input="props.updateUnsavedFlag(true)"/>
+            placeholder="Enter Song Title" @input="props.updateUnsavedFlag(true)" />
           <ErrorMessage class="text-red-600" name="modified_name"></ErrorMessage>
         </div>
         <div class="mb-3">
@@ -115,6 +116,9 @@ const updateSong = async (values) => {
   in_submission.value = false
   alert_variant.value = 'bg-green-500'
   alert_msg.value = 'Success! Song has been updated.'
+  setTimeout(() => {
+    show_alert.value = false
+  }, 2000)
 }
 
 const deleteSong = async () => {

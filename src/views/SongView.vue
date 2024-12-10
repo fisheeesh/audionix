@@ -44,7 +44,7 @@
 import SongCmtForm from '@/components/song/SongCmtForm.vue';
 import { useUserStore } from '@/stores/user';
 import { useRoute } from 'vue-router';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { cmtCollection, songsCollection } from '@/includes/firebase';
 import { useRouter } from 'vue-router';
 import SongComment from '@/components/song/SongComment.vue';
@@ -55,7 +55,7 @@ const route = useRoute()
 const song = ref({})
 const comments = ref([])
 const userStore = useUserStore()
-let sort = ref("1")
+const sort = ref("1")
 
 onMounted(() => {
   /**
@@ -71,6 +71,19 @@ onMounted(() => {
   })
 
   /**
+   * $ If there is a query para in the URL, if there is one, we will assign it to the sort data.
+   * ? route obj contains all the info about the current route.
+   * ? router obj is a general obj for interacting with the router in the application.
+   * ! There is one prolbem with this solution, we're updateing these sort property.
+   * ! This update will trigger the watch() for the callback func regardless if the value changed or not.
+   * ! Vue will throw an error if we attempt to visit a URL we're already visiting.
+   * $ To overcome this error by checking if the new value matches the query parameter.
+   */
+  const { _sort } = route.query
+  sort.value = _sort === "1" || _sort === "2" ? _sort : "1"
+
+  /**
+   *
    * ? Fetching all commnets according to song id
    */
   cmtCollection.where('sid', '==', route.params.id).onSnapshot(snap => {
@@ -79,7 +92,6 @@ onMounted(() => {
       let comment = { ...doc.data(), docID: doc.id };
       result.push(comment);
     });
-    console.log("Fetched comments: ", result);
     comments.value = result;
   });
 })
@@ -109,6 +121,26 @@ const sortedComments = computed(() => {
       return new Date(a.datePosted) - new Date(b.datePosted)
     }
   })
+})
+
+/**
+ * ? As soon as the sort value changes, we want to update the route.
+ * ? We want to add a query parameter to the current routes.
+ * ? push() accepts an obj that the changes we'd like to make to the current routes.
+ * ? Like the way { name : 'home' }
+ * ? query(obj) para uses key:value.
+ * ? The router will take care of converting this from an obj to a string.
+ * ? That will be appended to the URL.
+ */
+watch(sort, (newVal) => {
+  /**
+   * ? If the new value matches the query parameter, we will return the function.
+   * ? This condi will prevent the watcher from updating the route if the query parameter already matches.
+   */
+  if (newVal === route.query._sort) {
+    return
+  }
+  router.push({ query: { _sort: newVal } })
 })
 
 </script>

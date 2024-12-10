@@ -68,6 +68,9 @@ const addComment = async (values, { resetForm }) => {
   cmt_in_submission.value = false
   cmt_alert_variant.value = 'bg-green-500'
   cmt_alert_msg.value = 'Success! Comment added.'
+  setTimeout(() => {
+    cmt_show_alert.value = false
+  }, 2000)
 
   resetForm()
 }
