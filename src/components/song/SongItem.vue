@@ -9,10 +9,13 @@
     </div>
 
     <div class="text-lg text-gray-600">
-      <span class="comments">
-        <i class="text-gray-600 fa fa-comments"></i>
-        {{ props.song.comment_count }}
-      </span>
+      <router-link custom :to="{ name: 'song', params: { id: props.song.docID }, hash: '#comments' }"
+        v-slot="{ navigate }">
+        <span class="comments" @click="navigate">
+          <i class="text-gray-600 fa fa-comments"></i>
+          {{ props.song.comment_count }}
+        </span>
+      </router-link>
     </div>
   </li>
 </template>

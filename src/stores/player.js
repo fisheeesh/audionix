@@ -135,7 +135,7 @@ export const usePlayerStore = defineStore('player', () => {
 
     sound.value.seek(seconds)
 
-    sound.value.once('seek', updateProgress)
+    requestAnimationFrame(updateProgress)
   }
 
   return { newSong, currentSong, toggleAudio, playing, seek, duration, playerProgress, updateSeek }

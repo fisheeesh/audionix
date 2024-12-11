@@ -5,20 +5,20 @@
       style="background-image: url(/assets/img/song-header.png)"></div>
     <div class="container flex items-center mx-auto">
       <!-- Play/Pause Button -->
-      <button
-      @click.prevent="playerStore.newSong(song)"
-      type="button" class="z-50 w-24 h-24 text-3xl text-black bg-white rounded-full focus:outline-none">
-        <i class="fas fa-play"></i>
+      <button @click.prevent="playerStore.newSong(song)" type="button"
+        class="z-50 w-24 h-24 text-3xl text-black bg-white rounded-full focus:outline-none">
+        <i class="fas" :class="{ 'fa-play': !playerStore.playing, 'fa-pause': playerStore.playing }"></i>
       </button>
       <div class="z-50 ml-8 text-left">
         <!-- Song Info -->
         <div class="text-3xl font-bold">{{ song.modified_name }}</div>
         <div>{{ song.genre ? song.genre : 'N/A' }}</div>
+        <p>Playing: {{ playerStore.playing }}</p>
       </div>
     </div>
   </section>
   <!-- Form -->
-  <section class="container mx-auto mt-6">
+  <section class="container mx-auto mt-6" id="comments">
     <div class="relative flex flex-col bg-white border border-gray-200 rounded">
       <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
         <!-- Comment Count -->
