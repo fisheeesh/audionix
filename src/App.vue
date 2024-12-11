@@ -3,6 +3,7 @@
   <AppHeader />
 
   <!-- This will replaced with the correct component associated with the path -->
+  <!-- The reason we are grabbing the slot property is cus  we need access to the components that are being swapped-->
   <router-view v-slot="{ Component }">
     <transition name="fade" mode="out-in">
       <component :is="Component"></component>
@@ -34,15 +35,15 @@ onMounted(() => {
 </script>
 
 <style>
-.fade-enter-from{
+.fade-enter-from {
   opacity: 0;
 }
 
-.fade-enter-active{
+.fade-enter-active {
   transition: all 0.5s linear;
 }
 
-.fade-leave-to{
+.fade-leave-to {
   transition: all 0.5s linear;
   opacity: 0;
 }

@@ -21,10 +21,9 @@
     <!-- Main Content -->
     <section class="container mx-auto">
       <div class="relative flex flex-col bg-white border border-gray-200 rounded">
-        <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
+        <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200" v-icon.right="'headphones-alt'">
           <span class="card-title">Songs</span>
           <!-- Icon -->
-          <i class="float-right text-xl text-green-400 fa fa-headphones-alt"></i>
         </div>
         <!-- Playlist -->
         <ol id="playlist">
@@ -44,6 +43,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 const songs = ref([])
 const maxPerPage = ref(25)
 const pendingRequest = ref(false)
+
 
 onMounted(() => {
   getSongs()
