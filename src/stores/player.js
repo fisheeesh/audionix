@@ -20,7 +20,7 @@ export const usePlayerStore = defineStore('player', () => {
      * $ unload() will pause the audio and will also delete the instance and remove it from memory.
      * ? This is beneficial to us cuz we dun have to worry about howler causing memory leaking issues.
      */
-    if(sound.value instanceof Howl) {
+    if (sound.value instanceof Howl) {
       sound.value.unload()
     }
 
@@ -122,5 +122,21 @@ export const usePlayerStore = defineStore('player', () => {
     }
   }
 
-  return { newSong, currentSong, toggleAudio, playing, seek, duration, playerProgress }
+  const updateSeek = (event) => {
+    if (!sound.value.playing) {
+      return
+    }
+
+    const { x, width } = event.currentTarget.getBoundingClientRect()
+    // $ clickX will present the x coordinate of the click
+    const clickX = event.clientX - x
+    const percentage = clickX / width
+    const seconds = sound.value.duration() * percentage
+
+    sound.value.seek(seconds)
+
+    sound.value.once('seek', updateProgress)
+  }
+
+  return { newSong, currentSong, toggleAudio, playing, seek, duration, playerProgress, updateSeek }
 })
