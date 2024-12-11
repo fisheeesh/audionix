@@ -8,11 +8,22 @@ export const usePlayerStore = defineStore('player', () => {
   const sound = ref({})
   const seek = ref('00:00')
   const duration = ref('00:00')
+  //? We are using % cuz width and left CSS properties will accept % unit.
+  const playerProgress = ref('0%')
 
   /**
    * $ One action for adding a new song to the player
    */
   const newSong = async (song) => {
+    /**
+     * ? Before that, we have one issue if we click the play button again, we'll get multiple songs
+     * $ unload() will pause the audio and will also delete the instance and remove it from memory.
+     * ? This is beneficial to us cuz we dun have to worry about howler causing memory leaking issues.
+     */
+    if(sound.value instanceof Howl) {
+      sound.value.unload()
+    }
+
     currentSong.value = song
 
     /**
@@ -96,6 +107,8 @@ export const usePlayerStore = defineStore('player', () => {
     seek.value = helper.formatTime(sound.value.seek())
     duration.value = helper.formatTime(sound.value.duration())
 
+    playerProgress.value = `${(sound.value.seek() / sound.value.duration()) * 100}%`
+
     /**
      * ? We need to dispatch the updateProgress again within itself.
      * ? If we dun, seek will never reflect the current position of the audio.
@@ -109,5 +122,5 @@ export const usePlayerStore = defineStore('player', () => {
     }
   }
 
-  return { newSong, currentSong, toggleAudio, playing, seek, duration }
+  return { newSong, currentSong, toggleAudio, playing, seek, duration, playerProgress }
 })
