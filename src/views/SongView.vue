@@ -5,7 +5,9 @@
       style="background-image: url(/assets/img/song-header.png)"></div>
     <div class="container flex items-center mx-auto">
       <!-- Play/Pause Button -->
-      <button type="button" class="z-50 w-24 h-24 text-3xl text-black bg-white rounded-full focus:outline-none">
+      <button
+      @click.prevent="playerStore.newSong(song)"
+      type="button" class="z-50 w-24 h-24 text-3xl text-black bg-white rounded-full focus:outline-none">
         <i class="fas fa-play"></i>
       </button>
       <div class="z-50 ml-8 text-left">
@@ -48,13 +50,15 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { cmtCollection, songsCollection } from '@/includes/firebase';
 import { useRouter } from 'vue-router';
 import SongComment from '@/components/song/SongComment.vue';
+import { usePlayerStore } from '@/stores/player';
 
 const router = useRouter()
 const route = useRoute()
+const userStore = useUserStore()
+const playerStore = usePlayerStore()
 
 const song = ref({})
 const comments = ref([])
-const userStore = useUserStore()
 const sort = ref("1")
 
 onMounted(() => {
