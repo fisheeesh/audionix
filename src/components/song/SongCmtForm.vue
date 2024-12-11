@@ -14,12 +14,16 @@
 </template>
 
 <script setup>
-import { auth, cmtCollection } from '@/includes/firebase';
+import { auth, cmtCollection, songsCollection } from '@/includes/firebase';
 import { reactive, ref } from 'vue';
 
 const props = defineProps({
   id: {
     type: String,
+    required: true
+  },
+  song: {
+    type: Object,
     required: true
   }
 })
@@ -64,6 +68,12 @@ const addComment = async (values, { resetForm }) => {
     cmt_alert_msg.value = 'Something went wrong. Please try again later.'
     return
   }
+
+  // eslint-disable-next-line vue/no-mutating-props
+  props.song.comment_count += 1
+  await songsCollection.doc(props.id).update({
+    comment_count: props.song.comment_count
+  })
 
   cmt_in_submission.value = false
   cmt_alert_variant.value = 'bg-green-500'

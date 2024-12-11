@@ -20,11 +20,11 @@
     <div class="relative flex flex-col bg-white border border-gray-200 rounded">
       <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
         <!-- Comment Count -->
-        <span class="card-title">Comments ({{ comments.length }})</span>
+        <span class="card-title">Comments ({{ song.comment_count }})</span>
         <i class="float-right text-2xl text-green-400 fa fa-comments"></i>
       </div>
       <div class="p-6">
-        <SongCmtForm v-if="userStore.userLoggedIn" :id="route.params.id" />
+        <SongCmtForm v-if="userStore.userLoggedIn" :id="route.params.id" :song="song" />
         <!-- Sort Comments -->
         <select v-model="sort"
           class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded">
