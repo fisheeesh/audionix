@@ -25,25 +25,25 @@
       </div>
       <VeeForm @submit="updateSong" :validation-schema="songSchema" :initial-values="songData">
         <div class="mb-3">
-          <label class="inline-block mb-2">Song Title</label>
+          <label class="inline-block mb-2">{{ $t('manage.song_name') }}</label>
           <VeeField name="modified_name" type="text"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Song Title" @input="props.updateUnsavedFlag(true)" />
           <ErrorMessage class="text-red-600" name="modified_name"></ErrorMessage>
         </div>
         <div class="mb-3">
-          <label class="inline-block mb-2">Genre</label>
+          <label class="inline-block mb-2">{{ $t('manage.song_genre') }}</label>
           <VeeField name="genre" type="text"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Genre" @input="props.updateUnsavedFlag(true)" />
           <ErrorMessage class="text-red-600" name="genre"></ErrorMessage>
         </div>
         <button :disabled="in_submission" type="submit" class="py-1.5 px-3 rounded text-white bg-green-600">
-          Submit
+          {{ $t('manage.update_btn') }}
         </button>
         <button :disabled="in_submission" @click.prevent="showForm = !showForm" type="button"
           class="ms-3 py-1.5 px-3 rounded text-white bg-gray-600">
-          Go Back
+          {{ $t('manage.bck_btn') }}
         </button>
       </VeeForm>
     </div>
@@ -54,6 +54,9 @@
 import { songsCollection, storage } from '@/includes/firebase';
 import { ErrorMessage } from 'vee-validate';
 import { reactive, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n()
 
 const props = defineProps({
   song: {
@@ -69,7 +72,7 @@ const showForm = ref(false)
 const in_submission = ref(false)
 const show_alert = ref(false)
 const alert_variant = ref('bg-blue-500')
-const alert_msg = ref('Please wait! Updating song info.')
+const alert_msg = ref(t('manage.update_progress'))
 
 const songSchema = reactive({
   modified_name: 'required',
@@ -91,7 +94,7 @@ const updateSong = async (values) => {
    * ? alert_msg as well.
    */
   alert_variant.value = 'bg-blue-500'
-  alert_msg.value = 'Please wait! Updating song info.'
+  alert_msg.value = t('manage.update_progress')
 
   try {
     /**
@@ -104,7 +107,7 @@ const updateSong = async (values) => {
     console.log(error.message)
     in_submission.value = false
     alert_variant.value = 'bg-red-600'
-    alert_msg.value = 'Something went wrong. Please try again later.'
+    alert_msg.value = t('manage.update_error')
     return
   }
 
@@ -115,7 +118,7 @@ const updateSong = async (values) => {
 
   in_submission.value = false
   alert_variant.value = 'bg-green-500'
-  alert_msg.value = 'Success! Song has been updated.'
+  alert_msg.value = t('manage.update_success')
   setTimeout(() => {
     show_alert.value = false
   }, 2000)

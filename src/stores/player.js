@@ -2,8 +2,10 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { Howl } from 'howler'
 import helper from '@/includes/helper'
+import { useI18n } from 'vue-i18n'
 
 export const usePlayerStore = defineStore('player', () => {
+  const { t } = useI18n()
   const currentSong = ref({})
   const sound = ref({})
   const seek = ref('00:00')
@@ -66,7 +68,7 @@ export const usePlayerStore = defineStore('player', () => {
      * ? If there is no sound playing means no howl obj, we can just return the function.
      */
     if (!sound.value.playing) {
-      // alert("You have to choose a song first!.")
+      alert(t('home.no_audio'))
       return
     }
 

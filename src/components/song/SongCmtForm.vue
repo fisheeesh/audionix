@@ -8,7 +8,7 @@
       placeholder="Your comment here..."></VeeField>
     <ErrorMessage class="text-red-600 " name="comment" />
     <button :disabled="cmt_in_submission" type="submit" class="py-1.5 px-3 rounded text-white bg-green-600 block">
-      Submit
+      {{ $t('song.cmt_btn') }}
     </button>
   </VeeForm>
 </template>
@@ -16,6 +16,9 @@
 <script setup>
 import { auth, cmtCollection, songsCollection } from '@/includes/firebase';
 import { reactive, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n()
 
 const props = defineProps({
   id: {
@@ -31,7 +34,7 @@ const props = defineProps({
 const cmt_in_submission = ref(false)
 const cmt_show_alert = ref(false)
 const cmt_alert_variant = ref('bg-blue-500')
-const cmt_alert_msg = ref('Please wait! Your comment is being submitted.')
+const cmt_alert_msg = ref(t('song.cmt_progress'))
 
 const cmtSchema = reactive({
   comment: 'required|min:3'
@@ -48,7 +51,7 @@ const addComment = async (values, { resetForm }) => {
   cmt_in_submission.value = true
   cmt_show_alert.value = true
   cmt_alert_variant.value = 'bg-blue-500'
-  cmt_alert_msg.value = 'Please wait! Your comment is being submitted.'
+  cmt_alert_msg.value = t('song.cmt_progress')
 
   const comment = {
     content: values.comment,
@@ -65,7 +68,7 @@ const addComment = async (values, { resetForm }) => {
     console.log(err.message)
     cmt_in_submission.value = false
     cmt_alert_variant.value = 'bg-red-500'
-    cmt_alert_msg.value = 'Something went wrong. Please try again later.'
+    cmt_alert_msg.value = t('song.cmt_error')
     return
   }
 
@@ -77,7 +80,7 @@ const addComment = async (values, { resetForm }) => {
 
   cmt_in_submission.value = false
   cmt_alert_variant.value = 'bg-green-500'
-  cmt_alert_msg.value = 'Success! Comment added.'
+  cmt_alert_msg.value = t('song.cmt_success')
   setTimeout(() => {
     cmt_show_alert.value = false
   }, 2000)

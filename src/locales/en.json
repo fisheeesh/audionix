@@ -2,13 +2,32 @@
   "home": {
     "listen": "Listen to Great Music!",
     "content": "Discover an incredible collection of music that soothes your soul, energizes your day, and inspires creativity. Whether you're into timeless classics or the latest hits, there's something here for everyone. Start your journey to musical bliss today!",
-    "songs": "Songs"
+    "playlist_title": "Songs",
+    "no_audio": "You have to choose a song to listen first."
   },
   "song": {
-    "comment_count": "No Comments | 1 Comment | { count } Comments"
+    "comment_count": "No Comments | 1 Comment | { count } Comments",
+    "song_name": "Title",
+    "song_genre": "Genre",
+    "cmt_btn": "Submit",
+    "cmt_progress": "Please wait! Your comment is being submitted.",
+    "cmt_success": "Success! Comment added.",
+    "cmt_error": "Something went wrong. Please try again later."
   },
   "register": {
     "accept": "I acccept Music's {0}",
     "tos": "Terms of Service."
+  },
+  "manage": {
+    "my_songs": "My Songs",
+    "song_upload": "Upload",
+    "song_drop": "Drop your file here",
+    "song_name": "Song Title",
+    "song_genre": "Genre",
+    "update_btn": "Update",
+    "bck_btn": "Go Back",
+    "update_progress": "Please wait! Updating song info.",
+    "update_success": "Success! Song has been updated.",
+    "update_error": "Something went wrong. Please try again later."
   }
 }

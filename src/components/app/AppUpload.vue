@@ -1,7 +1,7 @@
 <template>
   <div class="relative flex flex-col bg-white border border-gray-200 rounded">
     <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
-      <span class="card-title">Upload</span>
+      <span class="card-title">{{ $t('manage.song_upload') }}</span>
       <i class="float-right text-2xl text-green-400 fas fa-upload"></i>
     </div>
     <div class="p-6">
@@ -11,7 +11,7 @@
         @drag.prevent.stop="" @dragstart.prevent.stop="" @dragend.prevent.stop="is_dragover = false"
         @dragover.prevent.stop="is_dragover = true" @dragenter.prevent.stop="is_dragover = true"
         @dragleave.prevent.stop="is_dragover = false" @drop.prevent.stop="upload($event)">
-        <h5>Drop your files here</h5>
+        <h5>{{ $t('manage.song_drop') }}</h5>
       </div>
       <input type="file" multiple @change="upload($event)">
       <hr class="my-6 " />

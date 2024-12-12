@@ -14,8 +14,8 @@
         </button>
         <div class="z-50 ml-8 text-left">
           <!-- Song Info -->
-          <div class="text-3xl font-bold">{{ song.modified_name }}</div>
-          <div>{{ song.genre ? song.genre : 'N/A' }}</div>
+          <div class="mb-2.5 text-3xl font-bold">{{ $t('song.song_name') }} - {{ song.modified_name }}</div>
+          <div>{{ $t('song.song_genre') }} - {{ song.genre ? song.genre : 'TBD' }}</div>
           <!-- <div class="song-price">{{ $n(1, "currency", "ja") }}</div> -->
         </div>
       </div>
@@ -27,9 +27,7 @@
           <!-- Comment Count -->
           <span class="card-title">
             {{
-              song.comment_count !== undefined
-                ? $t('song.comment_count', song.comment_count, { count: song.comment })
-                : $t('song.comment_count', { count: 0 })
+              getCommentText(song.comment_count)
             }}
           </span>
           <i class="float-right text-2xl text-green-400 fa fa-comments"></i>
@@ -61,7 +59,9 @@ import { cmtCollection, songsCollection } from '@/includes/firebase'
 import { useRouter } from 'vue-router'
 import SongComment from '@/components/song/SongComment.vue'
 import { usePlayerStore } from '@/stores/player'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
@@ -70,6 +70,13 @@ const playerStore = usePlayerStore()
 const song = ref({})
 const comments = ref([])
 const sort = ref('1')
+
+const getCommentText = ((comment_count) => {
+  if(comment_count !== undefined){
+    return t('song.comment_count', comment_count, { count: comment_count })
+  }
+  return t('song.comment_count', { count: 0 })
+})
 
 onMounted(() => {
   /**

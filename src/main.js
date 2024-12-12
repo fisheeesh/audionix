@@ -5,7 +5,7 @@ import App from './App.vue'
 import router from './router'
 import VeeValidatePulgin from './includes/validation'
 import { auth } from './includes/firebase'
-import Icon from './directives/icon'
+// import Icon from './directives/icon'
 import i18n from './includes/i18n'
 
 //fontawesome
@@ -42,7 +42,7 @@ auth.onAuthStateChanged(() => {
     // app.use(VeeValidatePulgin, { foo: 100 })
     app.use(VeeValidatePulgin, { foo: 100 })
     app.use(i18n)
-    app.directive("icon", Icon)
+    // app.directive("icon", Icon)
 
     app.mount('#app')
   }

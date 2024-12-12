@@ -64,7 +64,7 @@ const store = useModalStore()
 const userStore = useUserStore()
 
 const currentLocale = computed(() => {
-  return locale.value === "my" ? "Burmese" : "English"
+  return locale.value === "my" ? "မြန်မာ" : "English"
 })
 
 const toggleAuthModal = () => {
