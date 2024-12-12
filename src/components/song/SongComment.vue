@@ -3,7 +3,7 @@
     <!-- Comment Author -->
     <div class="mb-5">
       <div class="font-bold">{{ props.comment.name }}</div>
-      <time>{{ props.comment.datePosted }}</time>
+      <time class="text-sm text-gray-400">{{ formattedComment }}</time>
     </div>
     <p>
       {{ props.comment.content }}
@@ -12,12 +12,27 @@
 </template>
 
 <script setup>
+import { formatDistanceToNow } from 'date-fns';
+import { computed, onMounted } from 'vue';
+
 const props = defineProps({
   comment: {
     type: Object,
     required: true
   }
 })
+
+const formattedComment = computed(() => {
+  const formattedTime = formatDistanceToNow(new Date(props.comment.datePosted))
+
+  return `${formattedTime} ago`
+})
+
+onMounted(() => {
+  console.log(formatDistanceToNow(new Date(props.comment.datePosted)))
+  console.log(formattedComment.value)
+})
+
 </script>
 
 <style></style>
