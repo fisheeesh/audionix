@@ -11,7 +11,7 @@
     <div class="text-lg text-gray-600">
       <router-link custom :to="{ name: 'song', params: { id: props.song.docID }, hash: '#comments' }"
         v-slot="{ navigate }">
-        <span class="comments" @click="navigate">
+        <span class="comments hover:text-green-400" @click="navigate">
           <i class="text-gray-600 fa fa-comments"></i>
           {{ props.song.comment_count }}
         </span>
@@ -30,4 +30,5 @@ const props = defineProps({
 })
 </script>
 
-<style></style>
+<style>
+</style>

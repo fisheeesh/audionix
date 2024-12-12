@@ -45,7 +45,7 @@
     </section>
     <!-- Comments -->
     <ul class="container mx-auto">
-      <SongComment v-for="comment in sortedComments" :key="comment.docID" :comment="comment" />
+      <SongComment v-for="comment in sortedComments" :key="comment.docID" :comment="comment" :song="song" />
     </ul>
   </main>
 </template>
@@ -72,7 +72,7 @@ const comments = ref([])
 const sort = ref('1')
 
 const getCommentText = ((comment_count) => {
-  if(comment_count !== undefined){
+  if (comment_count !== undefined) {
     return t('song.comment_count', comment_count, { count: comment_count })
   }
   return t('song.comment_count', { count: 0 })

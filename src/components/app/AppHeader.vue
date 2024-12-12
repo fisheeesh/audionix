@@ -3,7 +3,7 @@
     <nav class="container flex items-center justify-start px-4 py-5 mx-auto">
       <!-- App Name -->
       <router-link exact-active-class="no-active" :to="{ name: 'home' }"
-        class="mr-4 text-2xl font-bold text-white uppercase">Music</router-link>
+        class="mr-4 text-2xl font-bold text-white uppercase">Audionix</router-link>
 
       <div class="flex items-center w-full">
         <!-- Primary Navigation -->
