@@ -3,14 +3,17 @@
     <nav class="container flex items-center justify-start px-4 py-5 mx-auto">
       <!-- App Name -->
       <router-link exact-active-class="no-active" :to="{ name: 'home' }"
-        class="mr-4 text-2xl font-bold text-white uppercase">Audionix</router-link>
+        class="flex items-center mr-4 text-2xl font-bold text-white uppercase">
+        <span>Audio</span>
+        <i class="ml-1 fas fa-music"></i><span class="ms-1.5">ix</span>
+      </router-link>
 
-      <div class="flex items-center w-full">
+      <div class="flex items-center w-full ms-5">
         <!-- Primary Navigation -->
         <ul class="flex flex-row mt-1">
-          <li>
+          <!-- <li>
             <router-link class="px-2 text-white" :to="{ name: 'about' }">About</router-link>
-          </li>
+          </li> -->
           <!-- Navigation Links -->
           <li v-if="!userStore.userLoggedIn">
             <button class="px-2 text-white focus:outline-none form-option" @click.prevent="toggleAuthModal">
@@ -35,7 +38,12 @@
         <!-- Second UL aligned to the right -->
         <ul class="ml-auto">
           <li>
-            <a href="#" class="px-2 text-white" @click.prevent="changeLocale">
+            <!-- Add "Hi there!" text here -->
+            <span class="px-2 text-white me-5">
+              {{ $t('home.greet') }}
+              <span class="font-bold text-yellow-400 ms-2">{{ auth.currentUser.displayName }}</span>
+            </span>
+            <a href="#" class="px-2 text-white ms-3" @click.prevent="changeLocale">
               {{ currentLocale }}
             </a>
           </li>
@@ -46,6 +54,7 @@
 </template>
 
 <script setup>
+import { auth } from "@/includes/firebase";
 // import getUser from "@/composables/getUser";
 import { useModalStore } from "@/stores/modal"
 import { useUserStore } from "@/stores/user";
