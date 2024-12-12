@@ -1,6 +1,40 @@
-# music
+# Audionix 🎵
 
-This template should help get you started developing with Vue 3 in Vite.
+Audionix is a modern music application where users, artists, and producers can enjoy and manage music in a seamless experience. Whether you’re a listener or a creator, Audionix offers intuitive tools to explore, upload, and manage your music. Built with Vue 3, Firebase, Pinia, and Tailwind CSS, this single-page application (SPA) ensures smooth interactions, an elegant design, and secure features for everyone.
+
+![User Interface](./public/assets/img/screen.png)
+
+## Features
+
+### General Features
+- **Listen to Music**: Browse and play songs with a responsive progress bar allowing you to jump to any part of a song.
+- **Infinite Scroll**: Displays an initial set of 10 songs and fetches more as you scroll down the homepage.
+- **Smooth Transitions**: Enjoy smooth animations while navigating between routes and components.
+- **Multilingual Support**: Switch between English and Burmese with Vue-i18n for a localized experience.
+
+### Authenticated Features
+- **Login/Registration**: Secure authentication using Firebase Auth.
+- **Music Management**: Upload, update, and delete your own songs with support for fallback and dropdown upload. Multiple uploads are allowed.
+- **Comment System**: Leave comments on songs you like, with timestamps formatted using Date-fns. Manage (delete) only your own comments.
+- **Access Control**: Only authenticated users can upload, manage, or comment on songs.
+
+### Security
+- **Route Guards**: Prevent unauthorized access to restricted pages and features.
+- **User Permissions**: Users can manage only their uploaded content, ensuring privacy and security.
+
+### Design
+- **Responsive Design**: Built with Tailwind CSS for a sleek, modern, and mobile-friendly interface.
+- **UX Enhancements**: Smooth animations and transitions for better user experience.
+
+## Tools and Technologies
+- **Frontend**: Vue 3 with Vite.
+- **State Management**: Pinia for efficient and reactive state handling.
+- **Form Validation**: Vee-Validate for robust and user-friendly form handling.
+- **Audio Playback**: Howler.js for seamless music playback.
+- **Localization**: Vue-i18n for internationalization (English and Burmese).
+- **Date Formatting**: Date-fns to display human-readable timestamps for comments.
+- **Backend**: Firebase (Firestore for data, Firebase Storage for songs, and Firebase Auth for authentication).
+- **Styling**: Tailwind CSS for responsive and elegant design.
 
 ## Recommended IDE Setup
 
