@@ -1,11 +1,11 @@
 <template>
   <header id="header" class="bg-gray-700">
-    <nav class="container flex items-center justify-between px-4 py-5 mx-auto">
+    <nav class="container flex items-center justify-start px-4 py-5 mx-auto">
       <!-- App Name -->
       <router-link exact-active-class="no-active" :to="{ name: 'home' }"
         class="mr-4 text-2xl font-bold text-white uppercase">Music</router-link>
 
-      <div class="flex items-center">
+      <div class="flex items-center w-full">
         <!-- Primary Navigation -->
         <ul class="flex flex-row mt-1">
           <li>
@@ -17,7 +17,6 @@
               Login / Register
             </button>
           </li>
-          <!-- By wrapping it with the template tags, we'll be able to render multiple list items -->
           <template v-else>
             <li>
               <router-link :to="{ name: 'manage' }"
@@ -33,6 +32,14 @@
             </li>
           </template>
         </ul>
+        <!-- Second UL aligned to the right -->
+        <ul class="ml-auto">
+          <li>
+            <a href="#" class="px-2 text-white" @click.prevent="changeLocale">
+              {{ currentLocale }}
+            </a>
+          </li>
+        </ul>
       </div>
     </nav>
   </header>
@@ -42,9 +49,12 @@
 // import getUser from "@/composables/getUser";
 import { useModalStore } from "@/stores/modal"
 import { useUserStore } from "@/stores/user";
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 // import { watch } from "vue";
 import { useRoute, useRouter } from "vue-router"
 
+const { locale } = useI18n()
 const route = useRoute()
 
 // const { user } = getUser()
@@ -52,6 +62,10 @@ const route = useRoute()
 const router = useRouter()
 const store = useModalStore()
 const userStore = useUserStore()
+
+const currentLocale = computed(() => {
+  return locale.value === "my" ? "Burmese" : "English"
+})
 
 const toggleAuthModal = () => {
   store.isOpen = !store.isOpen
@@ -84,6 +98,10 @@ const signOut = () => {
 // watch(user, () => {
 //   if (!user.value) router.push({ name: 'home' })
 // })
+
+const changeLocale = () => {
+  locale.value = locale.value === 'my' ? 'en' : 'my'
+}
 </script>
 
 <style></style>

@@ -7,14 +7,16 @@
       <div class="container flex items-center mx-auto">
         <!-- Play/Pause Button -->
         <button @click.prevent="playerStore.newSong(song)" type="button"
-          class="z-50 w-24 h-24 text-3xl text-black bg-white rounded-full focus:outline-none">
-          <i class="fas" :class="{ 'fa-play': !playerStore.playing, 'fa-pause': playerStore.playing }"></i>
+          class="z-50 flex items-center justify-center w-24 h-24 text-3xl text-black bg-white rounded-full focus:outline-none">
+          <span class="text-gray-600 material-symbols-outlined" style="font-size: 40px">
+            {{ playerStore.playing ? 'motion_photos_paused' : 'motion_play' }}
+          </span>
         </button>
         <div class="z-50 ml-8 text-left">
           <!-- Song Info -->
           <div class="text-3xl font-bold">{{ song.modified_name }}</div>
           <div>{{ song.genre ? song.genre : 'N/A' }}</div>
-          <p>Playing: {{ playerStore.playing }}</p>
+          <!-- <div class="song-price">{{ $n(1, "currency", "ja") }}</div> -->
         </div>
       </div>
     </section>
@@ -23,7 +25,13 @@
       <div class="relative flex flex-col bg-white border border-gray-200 rounded">
         <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
           <!-- Comment Count -->
-          <span class="card-title">Comments ({{ song.comment_count }})</span>
+          <span class="card-title">
+            {{
+              song.comment_count !== undefined
+                ? $t('song.comment_count', song.comment_count, { count: song.comment })
+                : $t('song.comment_count', { count: 0 })
+            }}
+          </span>
           <i class="float-right text-2xl text-green-400 fa fa-comments"></i>
         </div>
         <div class="p-6">
@@ -45,14 +53,14 @@
 </template>
 
 <script setup>
-import SongCmtForm from '@/components/song/SongCmtForm.vue';
-import { useUserStore } from '@/stores/user';
-import { useRoute } from 'vue-router';
-import { computed, onMounted, ref, watch } from 'vue';
-import { cmtCollection, songsCollection } from '@/includes/firebase';
-import { useRouter } from 'vue-router';
-import SongComment from '@/components/song/SongComment.vue';
-import { usePlayerStore } from '@/stores/player';
+import SongCmtForm from '@/components/song/SongCmtForm.vue'
+import { useUserStore } from '@/stores/user'
+import { useRoute } from 'vue-router'
+import { computed, onMounted, ref, watch } from 'vue'
+import { cmtCollection, songsCollection } from '@/includes/firebase'
+import { useRouter } from 'vue-router'
+import SongComment from '@/components/song/SongComment.vue'
+import { usePlayerStore } from '@/stores/player'
 
 const router = useRouter()
 const route = useRoute()
@@ -61,13 +69,13 @@ const playerStore = usePlayerStore()
 
 const song = ref({})
 const comments = ref([])
-const sort = ref("1")
+const sort = ref('1')
 
 onMounted(() => {
   /**
    * ? Fetching song by specific docID
    */
-  songsCollection.doc(route.params.id).onSnapshot(doc => {
+  songsCollection.doc(route.params.id).onSnapshot((doc) => {
     // console.log(doc.data())
     if (!doc.exists) {
       router.push({ name: 'home' })
@@ -86,24 +94,24 @@ onMounted(() => {
    * $ To overcome this error by checking if the new value matches the query parameter.
    */
   const { _sort } = route.query
-  sort.value = _sort === "1" || _sort === "2" ? _sort : "1"
+  sort.value = _sort === '1' || _sort === '2' ? _sort : '1'
 
   /**
    *
    * ? Fetching all commnets according to song id
    */
-  cmtCollection.where('sid', '==', route.params.id).onSnapshot(snap => {
-    let result = [];
-    snap.docs.forEach(doc => {
-      let comment = { ...doc.data(), docID: doc.id };
-      result.push(comment);
-    });
-    comments.value = result;
-  });
+  cmtCollection.where('sid', '==', route.params.id).onSnapshot((snap) => {
+    let result = []
+    snap.docs.forEach((doc) => {
+      let comment = { ...doc.data(), docID: doc.id }
+      result.push(comment)
+    })
+    comments.value = result
+  })
 })
 
 const sortedComments = computed(() => {
-  console.log("Sorting triggered: ", sort.value);
+  console.log('Sorting triggered: ', sort.value)
   /**
    * $ We will get an error if we call sort() directly.
    * ? Cus the sort array func will change the way it's being called on.
@@ -119,11 +127,11 @@ const sortedComments = computed(() => {
      * ? If it's 1, it will be latest to oldest.
      * ? If it's 2, it will be oldest to latest.
      */
-    if (sort.value === "1") {
+    if (sort.value === '1') {
       return new Date(b.datePosted) - new Date(a.datePosted)
     }
 
-    if (sort.value === "2") {
+    if (sort.value === '2') {
       return new Date(a.datePosted) - new Date(b.datePosted)
     }
   })
@@ -148,7 +156,6 @@ watch(sort, (newVal) => {
   }
   router.push({ query: { _sort: newVal } })
 })
-
 </script>
 
 <style></style>

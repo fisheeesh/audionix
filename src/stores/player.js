@@ -66,6 +66,7 @@ export const usePlayerStore = defineStore('player', () => {
      * ? If there is no sound playing means no howl obj, we can just return the function.
      */
     if (!sound.value.playing) {
+      // alert("You have to choose a song first!.")
       return
     }
 
@@ -136,6 +137,7 @@ export const usePlayerStore = defineStore('player', () => {
     sound.value.seek(seconds)
 
     requestAnimationFrame(updateProgress)
+    // sound.value.once('seek', updateProgress)
   }
 
   return { newSong, currentSong, toggleAudio, playing, seek, duration, playerProgress, updateSeek }
