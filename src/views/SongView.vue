@@ -9,7 +9,7 @@
         <button @click.prevent="playerStore.newSong(song)" type="button"
           class="z-50 flex items-center justify-center w-24 h-24 text-3xl text-black bg-white rounded-full focus:outline-none">
           <span class="text-gray-600 material-symbols-outlined" style="font-size: 40px">
-            {{ playerStore.playing ? 'motion_photos_paused' : 'motion_play' }}
+            {{ isCurrentSongPlaying }}
           </span>
         </button>
         <div class="z-50 ml-8 text-left">
@@ -45,7 +45,8 @@
     </section>
     <!-- Comments -->
     <ul class="container mx-auto">
-      <SongComment v-for="comment in sortedComments" :key="comment.docID" :comment="comment" :song="song" />
+      <SongComment v-for="comment in sortedComments" :key="comment.docID" :comment="comment" :song="song"
+        :id="route.params.id" />
     </ul>
   </main>
 </template>
@@ -71,6 +72,10 @@ const song = ref({})
 const comments = ref([])
 const sort = ref('1')
 
+const isCurrentSongPlaying = computed(() => {
+  return playerStore.playing && playerStore.currentSong?.docID === song.value.docID ? 'motion_photos_paused' : 'motion_play'
+})
+
 const getCommentText = ((comment_count) => {
   if (comment_count !== undefined) {
     return t('song.comment_count', comment_count, { count: comment_count })
@@ -79,6 +84,7 @@ const getCommentText = ((comment_count) => {
 })
 
 onMounted(() => {
+  console.log(playerStore.currentSong)
   /**
    * ? Fetching song by specific docID
    */
@@ -88,7 +94,7 @@ onMounted(() => {
       router.push({ name: 'home' })
       return
     }
-    song.value = doc.data()
+    song.value = { ...doc.data(), docID: doc.id }
   })
 
   /**

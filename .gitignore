@@ -29,3 +29,4 @@ src/includes/firebase.js
 *.sw?
 
 *.tsbuildinfo
+.vercel

@@ -41,7 +41,7 @@
             <!-- Add "Hi there!" text here -->
             <span class="px-2 text-white me-5">
               {{ $t('home.greet') }}
-              <span class="font-bold text-yellow-400 ms-2">{{ auth.currentUser.displayName }}</span>
+              <span class="font-bold text-yellow-400 ms-2">{{ userAuthorized }}</span>
             </span>
             <a href="#" class="px-2 text-white ms-3" @click.prevent="changeLocale">
               {{ currentLocale }}
@@ -71,6 +71,10 @@ const route = useRoute()
 const router = useRouter()
 const store = useModalStore()
 const userStore = useUserStore()
+
+const userAuthorized = computed(() => {
+  return auth.currentUser?.displayName ? auth.currentUser.displayName : 'nixie'
+})
 
 const currentLocale = computed(() => {
   return locale.value === "my" ? "မြန်မာ" : "English"
@@ -102,6 +106,7 @@ const signOut = () => {
    * ? By giving route meta fields, we can check for the meta field rather than the name
    */
   if (route.meta.requiresAuth) router.push({ name: 'home' })
+  window.location.reload()
 }
 
 // watch(user, () => {

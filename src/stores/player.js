@@ -120,9 +120,7 @@ export const usePlayerStore = defineStore('player', () => {
      * ! We dun have to worry about calling the func if the audio is paused.
      * ! The event listener we added in newSong() will dispatch updateProgress() if the song gets paused and then play it again.
      */
-    if (sound.value.playing()) {
-      requestAnimationFrame(updateProgress)
-    }
+    requestAnimationFrame(updateProgress)
   }
 
   const updateSeek = (event) => {
@@ -138,8 +136,8 @@ export const usePlayerStore = defineStore('player', () => {
 
     sound.value.seek(seconds)
 
-    requestAnimationFrame(updateProgress)
-    // sound.value.once('seek', updateProgress)
+    // requestAnimationFrame(updateProgress)
+    sound.value.once('seek', updateProgress)
   }
 
   return { newSong, currentSong, toggleAudio, playing, seek, duration, playerProgress, updateSeek }

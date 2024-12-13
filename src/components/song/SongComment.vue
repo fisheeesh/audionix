@@ -10,7 +10,7 @@
     </div>
 
     <!-- Delete Button (Right Aligned) -->
-    <button v-if="auth.currentUser.uid === props.comment.uid" class="text-red-500 hover:text-red-700 focus:outline-none"
+    <button v-if="userAuthorized" class="text-red-500 hover:text-red-700 focus:outline-none"
       @click.prevent="deleteComment">
       <i class="fas fa-trash-alt"></i> <!-- Trash icon -->
     </button>
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { auth, cmtCollection } from '@/includes/firebase';
+import { auth, cmtCollection, songsCollection } from '@/includes/firebase';
 import { formatDistanceToNow } from 'date-fns';
 import { computed, onMounted } from 'vue';
 
@@ -30,9 +30,16 @@ const props = defineProps({
   song: {
     type: Object,
     required: true
+  },
+  id: {
+    type: String,
+    required: true
   }
 })
 
+const userAuthorized = computed(() => {
+  return auth.currentUser?.uid === props.comment.uid
+})
 
 const formattedComment = computed(() => {
   const formattedTime = formatDistanceToNow(new Date(props.comment.datePosted))
@@ -43,12 +50,18 @@ const formattedComment = computed(() => {
 onMounted(() => {
   console.log(props.comment)
   console.log(formattedComment.value)
+  console.log(props.song.docID)
+  console.log(props.id)
 })
 
 const deleteComment = async () => {
+  await cmtCollection.doc(props.comment.docID).delete()
   // eslint-disable-next-line vue/no-mutating-props
   props.song.comment_count -= 1
-  await cmtCollection.doc(props.comment.docID).delete()
+  await songsCollection.doc(props.id).update({
+    comment_count: props.song.comment_count
+  })
+
 }
 
 </script>
