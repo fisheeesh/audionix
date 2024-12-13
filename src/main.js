@@ -7,6 +7,7 @@ import VeeValidatePulgin from './includes/validation'
 import { auth } from './includes/firebase'
 // import Icon from './directives/icon'
 import i18n from './includes/i18n'
+import progressBar from './includes/progress-bar'
 
 //fontawesome
 import '@fortawesome/fontawesome-free/css/all.css'
@@ -14,6 +15,9 @@ import '@fortawesome/fontawesome-free/js/all'
 
 import './assets/base.css'
 import './assets/main.css'
+import 'nprogress/nprogress.css'
+
+progressBar(router)
 
 let app;
 
