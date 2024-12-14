@@ -1,4 +1,31 @@
 {
+  "auth": {
+    "title": "Your Account",
+    "placeholder": {
+      "name": "Name",
+      "email": "Enter Email",
+      "password": "Enter Password",
+      "confirm_password": "Enter Password Again",
+      "age": "Must be over 18"
+    },
+    "form": {
+      "login": "Login",
+      "login_progress": "Please wait! We are loggging you in.",
+      "login_error": "Invalid login details.",
+      "login_success": "Success! You are now logged in.",
+      "register_progress": "Please wait! Your account is being created.",
+      "register_error": "An unexpected error occurred. Please try again later.",
+      "register_success": "Success! Your account has been created.",
+      "register": "Register",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "age": "Age",
+      "country": "Country",
+      "type": "User Type"
+    }
+  },
   "home": {
     "listen": "Listen to Great Music!",
     "content": "Discover an incredible collection of music that soothes your soul, energizes your day, and inspires creativity. Whether you're into timeless classics or the latest hits, there's something here for everyone. Start your journey to musical bliss today!",
