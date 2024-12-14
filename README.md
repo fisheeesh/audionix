@@ -36,6 +36,9 @@ Audionix is a modern music application where users, artists, and producers can e
 - **Backend**: Firebase (Firestore for data, Firebase Storage for songs, and Firebase Auth for authentication).
 - **Styling**: Tailwind CSS for responsive and elegant design.
 
+ ## Preview
+ Live Demo - https://music-b055.web.app
+
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
