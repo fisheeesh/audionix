@@ -31,7 +31,8 @@
     "content": "Discover an incredible collection of music that soothes your soul, energizes your day, and inspires creativity. Whether you're into timeless classics or the latest hits, there's something here for everyone. Start your journey to musical bliss today!",
     "playlist_title": "Songs",
     "no_audio": "You have to choose a song to listen first.",
-    "greet": "Hi there!"
+    "greet": "Hi there!",
+    "no_songs" : "All songs have been shown."
   },
   "song": {
     "comment_count": "No Comments | 1 Comment | { count } Comments",
