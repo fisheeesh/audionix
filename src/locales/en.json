@@ -32,7 +32,8 @@
     "playlist_title": "Songs",
     "no_audio": "You have to choose a song to listen first.",
     "greet": "Hi there!",
-    "no_songs" : "All songs have been shown."
+    "no_songs" : "All songs have been shown.",
+    "add_songs" : "Add Here."
   },
   "song": {
     "comment_count": "No Comments | 1 Comment | { count } Comments",
@@ -50,7 +51,7 @@
   "manage": {
     "my_songs": "My Songs",
     "song_upload": "Upload",
-    "song_drop": "Drop your file here",
+    "song_drop": "Drop your file here. Only .mp3 files are allowed.",
     "song_name": "Song Title",
     "song_genre": "Genre",
     "update_btn": "Update",

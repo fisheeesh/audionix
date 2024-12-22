@@ -34,7 +34,7 @@
       <PulseLoader />
     </div>
     <div v-if="noMoreSongs" class="py-4 text-center text-gray-500">
-      <span>{{ $t('home.no_songs') }}</span>
+      <span>{{ $t('home.no_songs') }} <router-link :to="{ name: 'manage' }">{{ $t('home.add_songs') }}</router-link></span>
     </div>
   </main>
 </template>

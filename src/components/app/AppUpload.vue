@@ -18,8 +18,14 @@
       <!-- Progess Bars -->
       <div class="mb-4" v-for="upload in uploads" :key="upload.name">
         <!-- File Name -->
-        <div class="text-sm font-bold" :class="upload.text_class">
-          <i :class="upload.icon"></i> {{ upload.name }}
+        <div v-if="upload.status === 'progress'" class="text-sm font-bold" :class="upload.text_class">
+          <span><i class="fas fa-spinner fa-spin"></i></span> {{ upload.name }}
+        </div>
+        <div v-else-if="upload.status === 'success'" class="text-sm font-bold" :class="upload.text_class">
+          <span><i class="fas fa-check"></i></span> {{ upload.name }}
+        </div>
+        <div v-else class="text-sm font-bold" :class="upload.text_class">
+          <span><i class="fas fa-circle-exclamation"></i></span> {{ upload.name }}
         </div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded ">
           <!-- Inner Progress Bar -->
@@ -77,7 +83,7 @@ const upload = ($event) => {
       current_progress: 0,
       name: file.name,
       variant: 'bg-blue-400',
-      icon: 'fas fa-spinner fa-spin',
+      status: "progress",
       text_class: ''
     }) - 1
 
@@ -88,8 +94,8 @@ const upload = ($event) => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
       uploads.value[uploadIndex].current_progress = progress
     }, (error) => {
+      uploads.value[uploadIndex].status = "error"
       uploads.value[uploadIndex].variant = 'bg-red-600'
-      uploads.value[uploadIndex].icon = 'fa-circle-exclamation'
       uploads.value[uploadIndex].text_class = 'text-red-600'
       console.log(error)
     }, async () => {
@@ -107,8 +113,8 @@ const upload = ($event) => {
 
       await songsCollection.add(songs)
 
+      uploads.value[uploadIndex].status = "success"
       uploads.value[uploadIndex].variant = 'bg-green-400'
-      uploads.value[uploadIndex].icon = 'fa-check'
       uploads.value[uploadIndex].text_class = 'text-green-400'
     })
   })
