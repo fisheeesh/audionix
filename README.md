@@ -4,6 +4,19 @@ Audionix is a modern music application where users, artists, and producers can e
 
 ![User Interface](./public/assets/img/screen.png)
 
+## Table of Contents
+- [Features](#features)
+  - [General Features](#general-features)
+  - [Authenticated Features](#authenticated-features)
+  - [Security](#security)
+  - [Design](#design)
+- [Tools and Technologies](#tools-and-technologies)
+- [Preview](#preview)
+- [Recommended IDE Setup](#recommended-ide-setup)
+- [Customize Configuration](#customize-configuration)
+- [Project Setup](#project-setup)
+- [License](#license)
+
 ## Features
 
 ### General Features
@@ -92,3 +105,11 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+
+## License
+
+This project is licensed under the **MIT License**.  
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
+
+You can view the full license [here](LICENSE).
